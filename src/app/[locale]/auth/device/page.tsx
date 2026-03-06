@@ -6,6 +6,8 @@ import { deviceCodes, users } from "@/lib/db/schema";
 import { eq, and, gt } from "drizzle-orm";
 import { DeviceSuccess } from "./DeviceSuccess";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Authorize Device",
   robots: { index: false, follow: false },
