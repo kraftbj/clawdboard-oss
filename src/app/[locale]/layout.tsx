@@ -137,10 +137,10 @@ export default async function LocaleLayout({
             Skip to content
           </a>
           <div id="main-content" className="flex-1">{children}</div>
+          <ActivityTracker />
         </NextIntlClientProvider>
         <Footer />
         <ClientAnalytics />
-        <ActivityTracker />
         <FeedbackWidget />
       </body>
     </html>
