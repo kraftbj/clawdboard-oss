@@ -97,3 +97,4 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 ---
 
 Built with Claude Code by the team at [Morgen](https://morgen.so).
+
