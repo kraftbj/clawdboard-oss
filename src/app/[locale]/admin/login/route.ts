@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { env } from "@/lib/env";
 import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
-  const adminPassword = env.ADMIN_PASSWORD;
+  const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) {
     return NextResponse.json(
       { error: "Admin access not configured" },
