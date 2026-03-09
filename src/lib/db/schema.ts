@@ -239,7 +239,7 @@ export const leaderboardView = pgMaterializedView("leaderboard_mv", {
       u.github_username,
       u.image,
       COALESCE(SUM(da.total_cost::numeric), 0) AS total_cost,
-      COALESCE(SUM(da.input_tokens + da.output_tokens), 0) AS total_tokens,
+      COALESCE(SUM(da.input_tokens + da.output_tokens + da.cache_creation_tokens + da.cache_read_tokens), 0) AS total_tokens,
       COUNT(DISTINCT da.date) AS active_days
     FROM users u
     LEFT JOIN daily_aggregates da ON da.user_id = u.id

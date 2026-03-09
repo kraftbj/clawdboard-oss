@@ -209,7 +209,7 @@ export async function getTeamLeaderboardData(
           u.cooking_url,
           u.cooking_label,
           SUM(da.total_cost::numeric)::text AS total_cost,
-          SUM(da.input_tokens + da.output_tokens) AS total_tokens,
+          SUM(da.input_tokens + da.output_tokens + da.cache_creation_tokens + da.cache_read_tokens) AS total_tokens,
           COUNT(DISTINCT da.date) AS active_days
         FROM daily_aggregates da
         JOIN team_members tm ON tm.user_id = da.user_id
@@ -305,7 +305,7 @@ export async function getPublicTeamLeaderboard(
         t.cooking_label,
         mc.cnt AS active_members,
         SUM(da.total_cost::numeric)::text AS total_cost,
-        SUM(da.input_tokens + da.output_tokens) AS total_tokens
+        SUM(da.input_tokens + da.output_tokens + da.cache_creation_tokens + da.cache_read_tokens) AS total_tokens
       FROM teams t
       JOIN member_counts mc ON mc.team_id = t.id
       JOIN team_members tm ON tm.team_id = t.id
@@ -364,7 +364,7 @@ export async function getTeamStats(
     db.execute(sql`
       SELECT
         COALESCE(SUM(da.total_cost::numeric), 0)::text AS total_cost,
-        COALESCE(SUM(da.input_tokens + da.output_tokens), 0) AS total_tokens,
+        COALESCE(SUM(da.input_tokens + da.output_tokens + da.cache_creation_tokens + da.cache_read_tokens), 0) AS total_tokens,
         COUNT(DISTINCT da.date) AS active_days
       FROM daily_aggregates da
       JOIN team_members tm ON tm.user_id = da.user_id
