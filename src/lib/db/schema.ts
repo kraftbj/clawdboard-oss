@@ -123,7 +123,7 @@ export const teams = pgTable("teams", {
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   inviteToken: text("invite_token").notNull(),
-  isPublic: boolean("is_public").default(false),
+  isPublic: boolean("is_public").default(true),
   isLocked: boolean("is_locked").default(false),
   cookingUrl: text("cooking_url"),
   cookingLabel: text("cooking_label"),

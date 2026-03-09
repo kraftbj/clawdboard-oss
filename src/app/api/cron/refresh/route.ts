@@ -112,7 +112,7 @@ export async function GET(req: NextRequest) {
         name TEXT NOT NULL,
         slug TEXT NOT NULL UNIQUE,
         invite_token TEXT NOT NULL,
-        is_public BOOLEAN DEFAULT FALSE,
+        is_public BOOLEAN DEFAULT TRUE,
         is_locked BOOLEAN DEFAULT FALSE,
         created_by TEXT NOT NULL REFERENCES users(id),
         deleted_at TIMESTAMPTZ,
