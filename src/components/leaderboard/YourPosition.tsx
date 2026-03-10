@@ -78,7 +78,7 @@ function SyncedStatBar({ row, period, rangeFrom, rangeTo, labels }: { row: Leade
         &#9650;+{row.rankDelta}
       </span>
     );
-  } else if (row.rankDelta < 0) {
+  } else if (row.rankDelta !== null && row.rankDelta < 0) {
     movementEl = (
       <span className="text-xs font-semibold text-danger">
         &#9660;{row.rankDelta}
