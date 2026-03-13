@@ -239,13 +239,13 @@
     "copyMarkdown": "Copy Markdown",
     "copied": "Copied!",
     "pasteTitle": "Paste it in your README",
-    "openGithub": "Open {repo} on GitHub",
+    "goToProfileReadme": "Go to github.com/{username}/{username} — this special repo's README shows on your profile",
     "editReadme": "Edit README.md",
     "pasteBadgeTop": "Paste the badge at the top",
-    "openMyRepo": "Open my repo",
-    "createProfileRepo": "Create a profile repo",
+    "openMyProfile": "Open my GitHub profile",
+    "noProfileRepo": "Don't have a profile README yet?",
+    "createOne": "Create one in 30 seconds",
     "done": "Done",
-    "profileRepoNote": "This repo's README is your profile page",
     "close": "Close"
   },
   "team": {

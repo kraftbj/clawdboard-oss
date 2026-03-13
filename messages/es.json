@@ -141,13 +141,13 @@
     "copyMarkdown": "Copiar Markdown",
     "copied": "Copiado!",
     "pasteTitle": "Pegalo en tu README",
-    "openGithub": "Abrir {repo} en GitHub",
+    "goToProfileReadme": "Ve a github.com/{username}/{username} — el README de este repo especial aparece en tu perfil",
     "editReadme": "Editar README.md",
     "pasteBadgeTop": "Pega el badge arriba",
-    "openMyRepo": "Abrir mi repo",
-    "createProfileRepo": "Crear un repo de perfil",
+    "openMyProfile": "Abrir mi perfil de GitHub",
+    "noProfileRepo": "No tienes un README de perfil?",
+    "createOne": "Crea uno en 30 segundos",
     "done": "Listo",
-    "profileRepoNote": "El README de este repo es tu pagina de perfil",
     "close": "Cerrar"
   },
   "profile": {

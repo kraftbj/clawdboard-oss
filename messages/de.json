@@ -141,13 +141,13 @@
     "copyMarkdown": "Markdown kopieren",
     "copied": "Kopiert!",
     "pasteTitle": "In deine README einfugen",
-    "openGithub": "{repo} auf GitHub offnen",
+    "goToProfileReadme": "Gehe zu github.com/{username}/{username} — die README dieses speziellen Repos erscheint auf deinem Profil",
     "editReadme": "README.md bearbeiten",
     "pasteBadgeTop": "Badge oben einfugen",
-    "openMyRepo": "Mein Repo offnen",
-    "createProfileRepo": "Profil-Repo erstellen",
+    "openMyProfile": "Mein GitHub-Profil offnen",
+    "noProfileRepo": "Noch kein Profil-README?",
+    "createOne": "In 30 Sekunden erstellen",
     "done": "Fertig",
-    "profileRepoNote": "Die README dieses Repos ist deine Profilseite",
     "close": "Schliessen"
   },
   "profile": {

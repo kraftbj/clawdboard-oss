@@ -317,9 +317,8 @@ function StepPaste({
   const t = useTranslations("badgePrompt");
   const [showConfetti, setShowConfetti] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
-  const repoUrl = `https://github.com/${username}/${username}`;
-  const createRepoUrl =
-    "https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme";
+  const profileUrl = `https://github.com/${username}`;
+  const createRepoUrl = `https://github.com/new?name=${encodeURIComponent(username)}&description=${encodeURIComponent("My GitHub profile README")}`;
 
   useEffect(() => {
     return () => {
@@ -327,9 +326,9 @@ function StepPaste({
     };
   }, []);
 
-  const handleOpenRepo = () => {
+  const handleOpenProfile = () => {
     window.plausible("Badge_Open_Repo");
-    window.open(repoUrl, "_blank", "noopener,noreferrer");
+    window.open(profileUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleDone = () => {
@@ -350,12 +349,7 @@ function StepPaste({
           <span className="flex-none w-6 h-6 rounded-full bg-accent/15 text-accent text-xs font-bold flex items-center justify-center">
             1
           </span>
-          <span>
-            {t("openGithub", { repo: `${username}/${username}` })}
-            <span className="text-muted text-xs block mt-0.5">
-              {t("profileRepoNote")}
-            </span>
-          </span>
+          <span>{t("goToProfileReadme", { username })}</span>
         </li>
         <li className="flex gap-3">
           <span className="flex-none w-6 h-6 rounded-full bg-accent/15 text-accent text-xs font-bold flex items-center justify-center">
@@ -373,23 +367,24 @@ function StepPaste({
         </li>
       </ol>
 
-      {/* Two equal-level CTAs */}
-      <div className="grid grid-cols-2 gap-2 mb-2">
-        <button
-          onClick={handleOpenRepo}
-          className="py-2 rounded bg-accent hover:bg-accent/90 text-background text-xs font-mono font-semibold transition-colors cursor-pointer"
+      <button
+        onClick={handleOpenProfile}
+        className="w-full py-2 rounded bg-accent hover:bg-accent/90 text-background text-sm font-mono font-semibold transition-colors cursor-pointer mb-2"
+      >
+        {t("openMyProfile")} &rarr;
+      </button>
+
+      <p className="text-xs text-muted text-center mb-3">
+        {t("noProfileRepo")}{" "}
+        <a
+          href={createRepoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
         >
-          {t("openMyRepo")} &rarr;
-        </button>
-        <button
-          onClick={() =>
-            window.open(createRepoUrl, "_blank", "noopener,noreferrer")
-          }
-          className="py-2 rounded border border-accent/40 hover:border-accent text-accent hover:text-accent text-xs font-mono font-semibold transition-colors cursor-pointer"
-        >
-          {t("createProfileRepo")}
-        </button>
-      </div>
+          {t("createOne")}
+        </a>
+      </p>
 
       <button
         onClick={handleDone}

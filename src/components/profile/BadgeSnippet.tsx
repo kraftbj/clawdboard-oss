@@ -48,7 +48,7 @@ export function BadgeSnippet({ username, baseUrl }: BadgeSnippetProps) {
         onClose={() => setOpen(false)}
         username={username}
         baseUrl={baseUrl}
-        initialStep={2}
+        initialStep={1}
       />
     </>
   );
