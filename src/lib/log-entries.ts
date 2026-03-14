@@ -33,6 +33,18 @@ export const logEntries: LogEntry[] = [
         description:
           "You're looking at it. clawdboard now has a changelog so you can keep up with new features and fixes.",
       },
+      {
+        title: "Contribute page",
+        type: "feature",
+        description:
+          "New contribute page linked from the footer with ways to get involved — report bugs, request features, submit PRs, or help with translations.",
+      },
+      {
+        title: "Updated pricing for Claude 4.6 & Gemini models",
+        type: "improvement",
+        description:
+          "The CLI now uses current pricing for Claude 4.6 and Gemini models, so your cost estimates stay accurate as providers update their rates.",
+      },
     ],
   },
   {
