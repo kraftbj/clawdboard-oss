@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import type { RecapRow } from "@/lib/db/recaps";
 import type { RecapData } from "@/lib/db/schema";
 import { SlideHook } from "./slides/SlideHook";
@@ -95,9 +96,9 @@ export function RecapStories({ recap, onClose }: RecapStoriesProps) {
   const periodLabel =
     recap.type === "weekly" ? "Weekly Recap" : "Monthly Recap";
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xl"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-xl"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -209,6 +210,7 @@ export function RecapStories({ recap, onClose }: RecapStoriesProps) {
           <kbd className="rounded border border-white/10 px-1">&#8594;</kbd>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
