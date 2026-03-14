@@ -1,0 +1,116 @@
+"use client";
+
+import type { RecapData } from "@/lib/db/schema";
+import { GenerativePattern } from "../visuals/GenerativePattern";
+import { AmbientParticles } from "../visuals/AmbientParticles";
+
+interface SlideHookProps {
+  data: RecapData;
+  periodLabel: string;
+  periodStart: string;
+  periodEnd: string;
+}
+
+function formatDateRange(start: string, end: string): string {
+  const s = new Date(start + "T12:00:00Z");
+  const e = new Date(end + "T12:00:00Z");
+  const opts: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  };
+  const startStr = s.toLocaleDateString("en-US", opts);
+  const endStr = e.toLocaleDateString("en-US", {
+    ...opts,
+    year: "numeric",
+  });
+  return `${startStr} \u2013 ${endStr}`;
+}
+
+function getTeaser(data: RecapData): string {
+  if (data.stateTier === "podium") {
+    if (data.rank === 1) return "You dominated.";
+    return "You hit the podium.";
+  }
+  if (data.stateTier === "top10") return "You broke the top 10.";
+  if (data.previousRank && data.previousRank > data.rank) {
+    const delta = data.previousRank - data.rank;
+    return `You climbed ${delta} spot${delta > 1 ? "s" : ""}.`;
+  }
+  if (data.previousRank && data.previousRank < data.rank) {
+    return "Time to reclaim your spot.";
+  }
+  if (data.stateTier === "top10pct") return "Top 10%. You're elite.";
+  return "Here's how you stacked up.";
+}
+
+export function SlideHook({
+  data,
+  periodLabel,
+  periodStart,
+  periodEnd,
+}: SlideHookProps) {
+  return (
+    <div className="relative flex flex-col items-center text-center gap-6">
+      {/* Generative background pattern */}
+      <GenerativePattern
+        rank={data.rank}
+        totalCost={data.totalCost}
+        streak={data.currentStreak}
+        tier={data.stateTier}
+        variant="geometric"
+      />
+
+      {/* Ambient particles */}
+      <AmbientParticles
+        count={15}
+        color={
+          data.stateTier === "podium"
+            ? "rgba(255, 215, 0, 0.12)"
+            : "rgba(249, 166, 21, 0.08)"
+        }
+      />
+
+      {/* Period badge */}
+      <div className="animate-fade-in relative z-10">
+        <span className="inline-block rounded-full border border-accent/30 bg-accent/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-accent">
+          {periodLabel}
+        </span>
+      </div>
+
+      {/* Date range */}
+      <p
+        className="font-mono text-sm text-white/40 animate-fade-in relative z-10"
+        style={{ animationDelay: "200ms" }}
+      >
+        {formatDateRange(periodStart, periodEnd)}
+      </p>
+
+      {/* Logo mark */}
+      <div
+        className="animate-fade-in relative z-10"
+        style={{ animationDelay: "400ms" }}
+      >
+        <span className="font-display text-4xl font-bold text-white tracking-tight">
+          <span className="text-accent">$</span> clawdboard
+        </span>
+      </div>
+
+      {/* Teaser */}
+      <p
+        className="font-mono text-lg text-white/80 animate-fade-in max-w-[280px] relative z-10"
+        style={{ animationDelay: "700ms" }}
+      >
+        {getTeaser(data)}
+      </p>
+
+      {/* Tap hint */}
+      <p
+        className="font-mono text-[10px] text-white/20 animate-fade-in relative z-10"
+        style={{ animationDelay: "1200ms" }}
+      >
+        tap to continue
+      </p>
+    </div>
+  );
+}

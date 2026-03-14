@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
+import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
 import { cachedAuth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
@@ -27,6 +28,7 @@ import { SyncBanner } from "@/components/leaderboard/SyncBanner";
 import { SyncCountdown } from "@/components/leaderboard/SyncCountdown";
 import { YourPosition } from "@/components/leaderboard/YourPosition";
 import { BadgePrompt } from "@/components/leaderboard/BadgePrompt";
+import { RecapBanner } from "@/components/recaps/RecapBanner";
 import { SignInButton } from "@/components/auth/SignInButton";
 import { UserNav } from "@/components/auth/UserNav";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
@@ -52,6 +54,25 @@ const jsonLd = {
   url: env.NEXT_PUBLIC_BASE_URL,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 };
+
+function buildItemListLd(rows: { githubUsername: string | null; totalCost: string; rank: number }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Claude Code Usage Leaderboard",
+    description: "Top developers ranked by Claude Code usage and estimated cost.",
+    numberOfItems: rows.length,
+    itemListElement: rows
+      .filter((r) => r.githubUsername)
+      .slice(0, 20)
+      .map((r) => ({
+        "@type": "ListItem",
+        position: r.rank,
+        name: r.githubUsername,
+        url: `${env.NEXT_PUBLIC_BASE_URL}/user/${r.githubUsername}`,
+      })),
+  };
+}
 
 interface PageProps {
   searchParams: Promise<{ period?: string; sort?: string; order?: string; from?: string; to?: string }>;
@@ -123,7 +144,14 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildItemListLd(rows)) }}
+      />
 
+
+      {/* Recap banner — full-width above header for logged-in users with unseen recaps */}
+      {session?.user && hasSynced && <RecapBanner />}
 
       {/* Sync banner — full-width above header for logged-in users without data */}
       {session?.user && !hasSynced && (
@@ -170,7 +198,10 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
         {!session?.user && (
           <p className="mb-6 font-mono text-xs leading-relaxed text-muted">
             <span className="text-dim select-none">{"// "}</span>
-            {t("seoIntro")}
+            {t("seoIntro")}{" "}
+            <Link href="/stats" className="text-accent hover:underline">
+              View community-wide usage statistics &rarr;
+            </Link>
           </p>
         )}
 

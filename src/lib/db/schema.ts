@@ -194,6 +194,58 @@ export const userGithubOrgs = pgTable(
   ]
 );
 
+// ─── Recaps (weekly/monthly usage summaries) ────────────────────────────────
+
+export interface RecapData {
+  rank: number;
+  previousRank: number | null;
+  totalUsers: number;
+  percentile: number;
+  totalCost: number;
+  costDelta: number | null;
+  totalTokens: number;
+  tokensDelta: number | null;
+  activeDays: number;
+  totalDays: number;
+  currentStreak: number;
+  peakDay: string | null; // "YYYY-MM-DD"
+  peakDayLabel: string; // "Monday" or "Mar 15"
+  peakDayCost: number;
+  topModel: { name: string; percentage: number } | null;
+  modelBreakdown: { name: string; cost: number; percentage: number }[];
+  stateTier: "empty" | "low" | "normal" | "top10pct" | "top10" | "podium";
+  rivalUsername: string | null;
+  rivalImage: string | null;
+  rivalGap: number | null;
+  rivalRank: number | null;
+}
+
+export const recaps = pgTable(
+  "recaps",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(), // "weekly" | "monthly"
+    periodStart: text("period_start").notNull(), // "YYYY-MM-DD"
+    periodEnd: text("period_end").notNull(), // "YYYY-MM-DD"
+    data: jsonb("data").$type<RecapData>().notNull(),
+    seenAt: timestamp("seen_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("recap_user_type_period_idx").on(
+      table.userId,
+      table.type,
+      table.periodStart
+    ),
+    index("recap_user_unseen_idx").on(table.userId, table.seenAt),
+  ]
+);
+
 // ─── Rank snapshots (daily rank tracking for movement indicators) ───────────
 
 export const rankSnapshots = pgTable(

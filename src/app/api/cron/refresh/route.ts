@@ -158,6 +158,28 @@ export async function GET(req: NextRequest) {
       ON user_github_orgs (org_login)
     `);
 
+    // Ensure recaps table exists (idempotent — first run creates it)
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS recaps (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        type TEXT NOT NULL,
+        period_start TEXT NOT NULL,
+        period_end TEXT NOT NULL,
+        data JSONB NOT NULL,
+        seen_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+    await db.execute(sql`
+      CREATE UNIQUE INDEX IF NOT EXISTS recap_user_type_period_idx
+      ON recaps (user_id, type, period_start)
+    `);
+    await db.execute(sql`
+      CREATE INDEX IF NOT EXISTS recap_user_unseen_idx
+      ON recaps (user_id, seen_at)
+    `);
+
     // No separate refresh needed — view is recreated with fresh data above
 
     // Capture rank snapshots from the refreshed materialized view (single batch)

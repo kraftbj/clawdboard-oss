@@ -159,7 +159,7 @@ export function ShareModal({
   const handleDownload = async () => {
     if (!cardRef.current || downloading) return;
     setDownloading(true);
-    window.plausible("Share", { props: { method: "download" } });
+    window.plausible?.("Share", { props: { method: "download" } });
     try {
       const { toPng } = await import("html-to-image");
       const dataUrl = await toPng(cardRef.current, {
@@ -180,7 +180,7 @@ export function ShareModal({
   };
 
   const handleTwitter = () => {
-    window.plausible("Share", { props: { method: "twitter" } });
+    window.plausible?.("Share", { props: { method: "twitter" } });
     window.open(
       buildTwitterIntentUrl(shareText, profileUrl),
       "_blank",
@@ -189,7 +189,7 @@ export function ShareModal({
   };
 
   const handleLinkedIn = () => {
-    window.plausible("Share", { props: { method: "linkedin" } });
+    window.plausible?.("Share", { props: { method: "linkedin" } });
     window.open(
       buildLinkedInShareUrl(profileUrl),
       "_blank",
@@ -198,7 +198,7 @@ export function ShareModal({
   };
 
   const handleCopyLink = async () => {
-    window.plausible("Share", { props: { method: "copy_link" } });
+    window.plausible?.("Share", { props: { method: "copy_link" } });
     await navigator.clipboard.writeText(profileUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

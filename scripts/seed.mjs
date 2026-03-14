@@ -247,6 +247,105 @@ await client.query(`
 `);
 console.log("  Materialized view created");
 
+// ─── Seed recaps (so RecapBanner renders for dev-alice) ─────────────────────
+
+console.log("Seeding recaps...");
+
+// Ensure recaps table exists
+await client.query(`
+  CREATE TABLE IF NOT EXISTS recaps (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    period_start TEXT NOT NULL,
+    period_end TEXT NOT NULL,
+    data JSONB NOT NULL,
+    seen_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )
+`);
+await client.query(`
+  CREATE UNIQUE INDEX IF NOT EXISTS recap_user_type_period_idx
+  ON recaps (user_id, type, period_start)
+`);
+await client.query(`
+  CREATE INDEX IF NOT EXISTS recap_user_unseen_idx
+  ON recaps (user_id, seen_at)
+`);
+
+// Build a sample weekly recap for dev-alice (rank #1 / podium)
+const aliceRecap = {
+  rank: 1,
+  previousRank: 3,
+  totalUsers: 5,
+  percentile: 100,
+  totalCost: 127.42,
+  costDelta: 34.18,
+  totalTokens: 2450000,
+  tokensDelta: 580000,
+  activeDays: 6,
+  totalDays: 7,
+  currentStreak: 12,
+  peakDay: dateStr(2),
+  peakDayLabel: new Date(today.getTime() - 2 * dayMs).toLocaleDateString("en-US", { weekday: "long" }),
+  peakDayCost: 28.45,
+  topModel: { name: "Opus 4", percentage: 68.3 },
+  modelBreakdown: [
+    { name: "Opus 4", cost: 87.03, percentage: 68.3 },
+    { name: "Sonnet 4", cost: 31.42, percentage: 24.7 },
+    { name: "Haiku 4", cost: 8.97, percentage: 7.0 },
+  ],
+  stateTier: "podium",
+  rivalUsername: null,
+  rivalImage: null,
+  rivalGap: null,
+  rivalRank: null,
+};
+
+await client.query(
+  `INSERT INTO recaps (id, user_id, type, period_start, period_end, data)
+   VALUES ($1, $2, 'weekly', $3, $4, $5)
+   ON CONFLICT (user_id, type, period_start) DO UPDATE SET data = EXCLUDED.data`,
+  [uuid(), seedUsers[0].id, dateStr(7), dateStr(1), JSON.stringify(aliceRecap)]
+);
+
+// Build a sample weekly recap for dev-bob (normal tier)
+const bobRecap = {
+  rank: 3,
+  previousRank: 2,
+  totalUsers: 5,
+  percentile: 60,
+  totalCost: 45.80,
+  costDelta: -12.30,
+  totalTokens: 890000,
+  tokensDelta: -210000,
+  activeDays: 4,
+  totalDays: 7,
+  currentStreak: 2,
+  peakDay: dateStr(3),
+  peakDayLabel: new Date(today.getTime() - 3 * dayMs).toLocaleDateString("en-US", { weekday: "long" }),
+  peakDayCost: 15.20,
+  topModel: { name: "Sonnet 4", percentage: 82.1 },
+  modelBreakdown: [
+    { name: "Sonnet 4", cost: 37.60, percentage: 82.1 },
+    { name: "Haiku 4", cost: 8.20, percentage: 17.9 },
+  ],
+  stateTier: "normal",
+  rivalUsername: "dev-carol",
+  rivalImage: "https://api.dicebear.com/9.x/pixel-art/svg?seed=carol",
+  rivalGap: 8.42,
+  rivalRank: 2,
+};
+
+await client.query(
+  `INSERT INTO recaps (id, user_id, type, period_start, period_end, data)
+   VALUES ($1, $2, 'weekly', $3, $4, $5)
+   ON CONFLICT (user_id, type, period_start) DO UPDATE SET data = EXCLUDED.data`,
+  [uuid(), seedUsers[1].id, dateStr(7), dateStr(1), JSON.stringify(bobRecap)]
+);
+
+console.log("  Created 2 sample recaps (dev-alice: podium, dev-bob: normal)");
+
 // ─── Done ────────────────────────────────────────────────────────────────────
 
 await client.end();

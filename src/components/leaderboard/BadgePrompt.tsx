@@ -172,7 +172,7 @@ function StepHook({
   const t = useTranslations("badgePrompt");
 
   useEffect(() => {
-    window.plausible("Badge_View");
+    window.plausible?.("Badge_View");
   }, []);
 
   return (
@@ -250,7 +250,7 @@ function StepCopy({
   }, []);
 
   const handleCopy = async () => {
-    window.plausible("Badge_Copy");
+    window.plausible?.("Badge_Copy");
     await navigator.clipboard.writeText(snippet);
     setCopied(true);
     timerRef.current = setTimeout(() => {
@@ -327,7 +327,7 @@ function StepPaste({
   }, []);
 
   const handleOpenProfile = () => {
-    window.plausible("Badge_Open_Repo");
+    window.plausible?.("Badge_Open_Repo");
     window.open(profileUrl, "_blank", "noopener,noreferrer");
   };
 

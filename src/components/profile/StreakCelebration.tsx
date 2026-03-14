@@ -133,7 +133,7 @@ export function StreakCelebration({
   const shareText = buildStreakShareText(currentStreak);
 
   const handleTwitter = useCallback(() => {
-    window.plausible("StreakShare", { props: { method: "twitter" } });
+    window.plausible?.("StreakShare", { props: { method: "twitter" } });
     window.open(
       buildTwitterIntentUrl(shareText, profileUrl),
       "_blank",
@@ -142,7 +142,7 @@ export function StreakCelebration({
   }, [shareText, profileUrl]);
 
   const handleLinkedIn = useCallback(() => {
-    window.plausible("StreakShare", { props: { method: "linkedin" } });
+    window.plausible?.("StreakShare", { props: { method: "linkedin" } });
     window.open(
       buildLinkedInShareUrl(profileUrl),
       "_blank",
@@ -151,7 +151,7 @@ export function StreakCelebration({
   }, [profileUrl]);
 
   const handleCopyLink = useCallback(async () => {
-    window.plausible("StreakShare", { props: { method: "copy_link" } });
+    window.plausible?.("StreakShare", { props: { method: "copy_link" } });
     await navigator.clipboard.writeText(profileUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -163,7 +163,7 @@ export function StreakCelebration({
 
   const handleCopyInvite = useCallback(async () => {
     if (!inviteUrl) return;
-    window.plausible("Invite_Copied", { props: { source: "streak_celebration" } });
+    window.plausible?.("Invite_Copied", { props: { source: "streak_celebration" } });
     await navigator.clipboard.writeText(inviteUrl);
     setInviteCopied(true);
     setTimeout(() => setInviteCopied(false), 2000);
