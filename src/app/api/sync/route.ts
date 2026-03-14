@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { revalidateAllCaches } from "@/lib/db/cached";
 import { db } from "@/lib/db";
 import { dailyAggregates, users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, isNull, inArray, sql } from "drizzle-orm";
 import { SyncPayloadSchema } from "@/lib/sync/validate";
 import { rateLimit } from "@/lib/rate-limit";
 import { isOrgDataStale, syncUserGitHubOrgs } from "@/lib/db/github-orgs";
@@ -64,9 +64,39 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4. Upsert each day within a single transaction (Pitfall 6: avoid Vercel timeout)
+    // 4. Upsert each day (Pitfall 6: avoid Vercel timeout)
     const { days, syncIntervalMs } = result.data;
 
+    // 4a. Clean up legacy null-source rows that would cause double-counting.
+    // When a CLI upgrade starts sending source="claude-code" (or other), the
+    // same usage data that was previously stored with source=NULL now arrives
+    // with a proper source tag. Delete the old NULL rows for dates being synced
+    // so the SUM queries don't count the same usage twice.
+    const sourcedDates = new Map<string, string[]>();
+    for (const day of days) {
+      if (day.source) {
+        const existing = sourcedDates.get(day.source) ?? [];
+        existing.push(day.date);
+        sourcedDates.set(day.source, existing);
+      }
+    }
+    if (sourcedDates.size > 0) {
+      // Collect all dates that have a non-null source in this sync
+      const allSourcedDates = [...new Set(days.filter(d => d.source).map(d => d.date))];
+      if (allSourcedDates.length > 0) {
+        await db
+          .delete(dailyAggregates)
+          .where(
+            and(
+              eq(dailyAggregates.userId, user.id),
+              isNull(dailyAggregates.source),
+              inArray(dailyAggregates.date, allSourcedDates)
+            )
+          );
+      }
+    }
+
+    // 4b. Upsert the actual data
     await Promise.all(
       days.map((day) =>
         db

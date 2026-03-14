@@ -190,6 +190,8 @@ export async function getUserSummary(
 
 /**
  * Get daily usage rows for a user, ordered by date ascending.
+ * Aggregates across sources (claude-code, opencode, codex, legacy null)
+ * so each date has exactly one row, consistent with getUserSummary.
  * When period is provided, filters to the given date range.
  */
 export async function getUserDailyData(
@@ -203,14 +205,15 @@ export async function getUserDailyData(
   return db
     .select({
       date: dailyAggregates.date,
-      totalCost: dailyAggregates.totalCost,
-      inputTokens: dailyAggregates.inputTokens,
-      outputTokens: dailyAggregates.outputTokens,
-      cacheCreationTokens: dailyAggregates.cacheCreationTokens,
-      cacheReadTokens: dailyAggregates.cacheReadTokens,
+      totalCost: sql<string>`SUM(${dailyAggregates.totalCost}::numeric)::text`,
+      inputTokens: sql<number>`SUM(${dailyAggregates.inputTokens})`,
+      outputTokens: sql<number>`SUM(${dailyAggregates.outputTokens})`,
+      cacheCreationTokens: sql<number>`SUM(${dailyAggregates.cacheCreationTokens})`,
+      cacheReadTokens: sql<number>`SUM(${dailyAggregates.cacheReadTokens})`,
     })
     .from(dailyAggregates)
     .where(and(...conditions))
+    .groupBy(dailyAggregates.date)
     .orderBy(asc(dailyAggregates.date));
 }
 
