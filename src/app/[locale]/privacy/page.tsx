@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { Header } from "@/components/layout/Header";
 import { Section, Item } from "@/components/ui/LegalSection";
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — clawdboard",
   description:
     "How clawdboard collects, uses, and protects your data. Learn about your rights under GDPR including data export, deletion, and more.",
-  alternates: { canonical: `${BASE_URL}/privacy` },
+  alternates: seoAlternates("/privacy"),
 };
 
 export default function PrivacyPage() {

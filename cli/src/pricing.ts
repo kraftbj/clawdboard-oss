@@ -4,10 +4,15 @@
  * Used to calculate costs from token counts when the source data
  * doesn't include cost (e.g., OpenCode message files always have cost: 0).
  *
- * Prices are per 1M tokens in USD. Only the most common models are included;
- * unknown models fall back to a default rate.
+ * Prices are per 1M tokens in USD. Cache write = 5-minute TTL rate.
+ * A weekly GitHub Action checks for pricing drift and opens a PR if needed.
  *
- * Sources: Anthropic and OpenAI published pricing pages.
+ * Sources:
+ *   Anthropic — https://platform.claude.com/docs/en/about-claude/pricing
+ *   OpenAI   — https://platform.openai.com/docs/pricing
+ *   Google   — https://ai.google.dev/gemini-api/docs/pricing
+ *
+ * Last verified: 2026-03-14
  */
 
 export interface ModelPricing {
@@ -20,35 +25,53 @@ export interface ModelPricing {
 /**
  * Pricing table keyed by model ID prefix.
  * Lookups strip date suffixes (e.g., "claude-sonnet-4-20250514" → "claude-sonnet-4").
+ *
+ * IMPORTANT: More-specific keys must come before less-specific ones.
+ * "claude-opus-4-6" must be listed separately from "claude-opus-4" because
+ * they have different prices ($5 vs $15 input).
  */
 const PRICING_TABLE: Record<string, ModelPricing> = {
-  // Anthropic Claude 4 family
+  // ── Anthropic Claude 4.6 ─────────────────────────────────────────────
+  "claude-opus-4-6": { input: 5, output: 25, cacheWrite: 6.25, cacheRead: 0.5 },
+  "claude-sonnet-4-6": { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
+
+  // ── Anthropic Claude 4.5 ─────────────────────────────────────────────
+  "claude-opus-4-5": { input: 5, output: 25, cacheWrite: 6.25, cacheRead: 0.5 },
+  "claude-sonnet-4-5": { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
+
+  // ── Anthropic Claude 4.1 ─────────────────────────────────────────────
+  "claude-opus-4-1": { input: 15, output: 75, cacheWrite: 18.75, cacheRead: 1.5 },
+
+  // ── Anthropic Claude 4.0 ─────────────────────────────────────────────
   "claude-opus-4": { input: 15, output: 75, cacheWrite: 18.75, cacheRead: 1.5 },
   "claude-sonnet-4": { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
 
-  // Anthropic Claude 3.5 family
+  // ── Anthropic Claude Haiku (latest) ──────────────────────────────────
+  "claude-haiku-4-5": { input: 1, output: 5, cacheWrite: 1.25, cacheRead: 0.1 },
+
+  // ── Anthropic Claude 3.5 family ──────────────────────────────────────
   "claude-3-5-sonnet": { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
   "claude-3-5-haiku": { input: 0.8, output: 4, cacheWrite: 1, cacheRead: 0.08 },
 
-  // Anthropic Claude 3 family
+  // ── Anthropic Claude 3 family ────────────────────────────────────────
   "claude-3-opus": { input: 15, output: 75, cacheWrite: 18.75, cacheRead: 1.5 },
   "claude-3-sonnet": { input: 3, output: 15, cacheWrite: 3.75, cacheRead: 0.3 },
   "claude-3-haiku": { input: 0.25, output: 1.25, cacheWrite: 0.3, cacheRead: 0.03 },
 
-  // OpenAI GPT-4o family
+  // ── OpenAI GPT-4o family ─────────────────────────────────────────────
   "gpt-4o": { input: 2.5, output: 10, cacheWrite: 0, cacheRead: 1.25 },
   "gpt-4o-mini": { input: 0.15, output: 0.6, cacheWrite: 0, cacheRead: 0.075 },
 
-  // OpenAI o-series
+  // ── OpenAI o-series ──────────────────────────────────────────────────
   "o1": { input: 15, output: 60, cacheWrite: 0, cacheRead: 7.5 },
   "o1-mini": { input: 3, output: 12, cacheWrite: 0, cacheRead: 1.5 },
   "o3": { input: 10, output: 40, cacheWrite: 0, cacheRead: 5 },
   "o3-mini": { input: 1.1, output: 4.4, cacheWrite: 0, cacheRead: 0.55 },
   "o4-mini": { input: 1.1, output: 4.4, cacheWrite: 0, cacheRead: 0.55 },
 
-  // Google Gemini
+  // ── Google Gemini ────────────────────────────────────────────────────
   "gemini-2.5-pro": { input: 1.25, output: 10, cacheWrite: 0, cacheRead: 0 },
-  "gemini-2.5-flash": { input: 0.15, output: 0.6, cacheWrite: 0, cacheRead: 0 },
+  "gemini-2.5-flash": { input: 0.3, output: 2.5, cacheWrite: 0, cacheRead: 0 },
   "gemini-2.0-flash": { input: 0.1, output: 0.4, cacheWrite: 0, cacheRead: 0 },
 };
 

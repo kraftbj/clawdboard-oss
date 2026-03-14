@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { Header } from "@/components/layout/Header";
 import { Section, Item } from "@/components/ui/LegalSection";
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   title: "Terms of Service — clawdboard",
   description:
     "Terms of Service for clawdboard, the AI coding usage leaderboard. Read about eligibility, acceptable use, data accuracy, and account termination.",
-  alternates: { canonical: `${BASE_URL}/terms` },
+  alternates: seoAlternates("/terms"),
 };
 
 export default function TermsPage() {

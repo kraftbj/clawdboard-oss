@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { cachedAuth } from "@/lib/auth";
 import { getUserTeams } from "@/lib/db/teams";
 import { getPublicTeamLeaderboard, VALID_PERIODS, parseDateRange, type Period } from "@/lib/db/cached";
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   title: "Team Leaderboard — Compare AI Coding Usage by Team",
   description:
     "See which teams spend the most on AI coding. Ranked by total cost, tokens, and active members — compare your team's usage against others.",
-  alternates: { canonical: `${env.NEXT_PUBLIC_BASE_URL}/teams` },
+  alternates: seoAlternates("/teams"),
 };
 
 interface PageProps {

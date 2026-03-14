@@ -6,6 +6,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { Footer } from "@/components/layout/Footer";
 import { ClientAnalytics } from "@/components/layout/ClientAnalytics";
 import { ActivityTracker } from "@/components/layout/ActivityTracker";
@@ -60,16 +61,7 @@ export async function generateMetadata({
       template: "%s | clawdboard",
     },
     description: t("description"),
-    alternates: {
-      canonical: localeUrl(locale),
-      languages: {
-        en: localeUrl("en"),
-        fr: localeUrl("fr"),
-        de: localeUrl("de"),
-        es: localeUrl("es"),
-        "x-default": localeUrl("en"),
-      },
-    },
+    alternates: seoAlternates("/"),
     openGraph: {
       siteName: "clawdboard",
       type: "website",
@@ -104,15 +96,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {routing.locales.map((loc) => (
-          <link
-            key={loc}
-            rel="alternate"
-            hrefLang={loc}
-            href={localeUrl(loc)}
-          />
-        ))}
-        <link rel="alternate" hrefLang="x-default" href={localeUrl("en")} />
         {process.env.NEXT_PUBLIC_PLAUSIBLE_SRC && (
           <Script
             src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC}

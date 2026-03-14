@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { cachedAuth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import {
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   title: "clawdboard — AI Coding Usage Leaderboard",
   description:
     "See who's spending the most on AI coding. Compare usage, costs, streaks, and model breakdowns across developers on the free community leaderboard.",
-  alternates: { canonical: env.NEXT_PUBLIC_BASE_URL },
+  alternates: seoAlternates("/"),
 };
 
 const jsonLd = {

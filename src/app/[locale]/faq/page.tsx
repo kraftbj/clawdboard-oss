@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { env } from "@/lib/env";
+import { seoAlternates } from "@/lib/seo";
 import { Header } from "@/components/layout/Header";
 import { getTranslations } from "next-intl/server";
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   title: "FAQ — How AI Coding Tracking, Costs & Streaks Work",
   description:
     "Answers to common questions about clawdboard — how cost estimates work, what data is tracked, privacy guarantees, streak calculations, and how to join the leaderboard.",
-  alternates: { canonical: `${BASE_URL}/faq` },
+  alternates: seoAlternates("/faq"),
 };
 
 const FAQ_COUNT = 16;

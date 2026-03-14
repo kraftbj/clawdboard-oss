@@ -14,6 +14,30 @@ describe("getModelPricing", () => {
     expect(pricing.output).toBe(75);
   });
 
+  it("matches claude-opus-4-6 (different price than opus-4)", () => {
+    const pricing = getModelPricing("claude-opus-4-6");
+    expect(pricing.input).toBe(5);
+    expect(pricing.output).toBe(25);
+  });
+
+  it("matches claude-opus-4-5 (different price than opus-4)", () => {
+    const pricing = getModelPricing("claude-opus-4-5");
+    expect(pricing.input).toBe(5);
+    expect(pricing.output).toBe(25);
+  });
+
+  it("matches claude-opus-4-1", () => {
+    const pricing = getModelPricing("claude-opus-4-1");
+    expect(pricing.input).toBe(15);
+    expect(pricing.output).toBe(75);
+  });
+
+  it("matches claude-haiku-4-5 with date suffix", () => {
+    const pricing = getModelPricing("claude-haiku-4-5-20251001");
+    expect(pricing.input).toBe(1);
+    expect(pricing.output).toBe(5);
+  });
+
   it("matches gpt-4o with date suffix", () => {
     const pricing = getModelPricing("gpt-4o-2024-08-06");
     expect(pricing.input).toBe(2.5);
@@ -40,6 +64,12 @@ describe("getModelPricing", () => {
     const pricing = getModelPricing("gemini-2.5-pro");
     expect(pricing.input).toBe(1.25);
   });
+
+  it("matches gemini-2.5-flash with updated pricing", () => {
+    const pricing = getModelPricing("gemini-2.5-flash");
+    expect(pricing.input).toBe(0.3);
+    expect(pricing.output).toBe(2.5);
+  });
 });
 
 describe("calculateCost", () => {
@@ -52,6 +82,17 @@ describe("calculateCost", () => {
     });
     // $3/1M input + $15/1M output = $18
     expect(cost).toBeCloseTo(18, 4);
+  });
+
+  it("calculates cost for claude-opus-4-6 correctly", () => {
+    const cost = calculateCost("claude-opus-4-6", {
+      input: 1_000_000,
+      output: 1_000_000,
+      cacheCreation: 0,
+      cacheRead: 0,
+    });
+    // $5/1M input + $25/1M output = $30
+    expect(cost).toBeCloseTo(30, 4);
   });
 
   it("includes cache token costs", () => {
