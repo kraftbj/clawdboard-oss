@@ -52,3 +52,6 @@ growthPlan.md
 
 # docker
 docker-compose.override.yml
+
+# local MCP servers
+.plausible-mcp/
