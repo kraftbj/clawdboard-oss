@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getCommunityStats,
   getModelStats,
+  getSourceBreakdown,
   VALID_PERIODS,
   parseDateRange,
   type Period,
@@ -44,9 +45,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const [community, models] = await Promise.all([
+    const [community, models, sourceBreakdown] = await Promise.all([
       getCommunityStats(period, range),
       getModelStats(period, range),
+      getSourceBreakdown(),
     ]);
 
     const now = new Date().toISOString();
@@ -81,6 +83,12 @@ export async function GET(req: NextRequest) {
           outputTokens: m.outputTokens,
           userCount: m.userCount,
           costSharePercent: m.costShare,
+        })),
+        sourceBreakdown: sourceBreakdown.map((s) => ({
+          source: s.source,
+          estimatedCost: s.totalCost,
+          totalTokens: s.totalTokens,
+          userCount: s.userCount,
         })),
         methodology: {
           source:

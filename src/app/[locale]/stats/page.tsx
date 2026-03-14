@@ -11,6 +11,7 @@ import {
 import { CommunityTrendChart } from "@/components/stats/CommunityTrendChart";
 import { ModelShareChart } from "@/components/stats/ModelShareChart";
 import { GrowthChart } from "@/components/stats/GrowthChart";
+import { SourceBreakdownChart } from "@/components/stats/SourceBreakdownChart";
 import { CopyIconButton } from "@/components/leaderboard/CopyIconButton";
 import { friendlyModelName } from "@/lib/chart-utils";
 
@@ -127,11 +128,13 @@ function getStatsFaqs(stats: {
 }
 
 export default async function StatsPage() {
-  const [stats, trends, models, growth] = await Promise.all([
+  const { getSourceBreakdown } = await import("@/lib/db/stats");
+  const [stats, trends, models, growth, sourceBreakdown] = await Promise.all([
     getCommunityStatsCached(),
     getDailyTrendsCached(),
     getModelStatsCached(),
     getWeeklyGrowthCached(),
+    getSourceBreakdown(),
   ]);
 
   const totalCost = parseFloat(stats.totalCost);
@@ -361,6 +364,19 @@ export default async function StatsPage() {
             more per token, so they can dominate spend even with fewer users.
           </p>
           <ModelShareChart data={models} />
+        </section>
+
+        {/* ── Source breakdown ─────────────────────────────────────────────── */}
+        <section className="mb-10" aria-labelledby="source-heading">
+          <h2 id="source-heading" className="text-lg font-semibold text-foreground mb-1">
+            Usage by Tool: Claude Code vs OpenCode vs Codex
+          </h2>
+          <p className="font-mono text-xs text-muted mb-4">
+            Where does the data come from? This breakdown shows estimated cost
+            share across the three supported AI coding tools. Each tool reads
+            local usage logs and contributes to the aggregate statistics.
+          </p>
+          <SourceBreakdownChart data={sourceBreakdown} />
         </section>
 
         {/* ── Community growth ────────────────────────────────────────────── */}

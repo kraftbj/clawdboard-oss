@@ -20,6 +20,9 @@ import {
   getDailyTrends as _getDailyTrends,
   getModelStats as _getModelStats,
   getWeeklyGrowth as _getWeeklyGrowth,
+  getModelDetailStats as _getModelDetailStats,
+  getModelDailyTrends as _getModelDailyTrends,
+  getDistinctModelSlugs as _getDistinctModelSlugs,
 } from "./stats";
 
 // ─── Cache tags (single source of truth) ────────────────────────────────────
@@ -42,6 +45,9 @@ export const TAG = {
   dailyTrends: "daily-trends",
   modelStats: "model-stats",
   weeklyGrowth: "weekly-growth",
+  modelDetail: "model-detail",
+  modelDailyTrends: "model-daily-trends",
+  modelSlugs: "model-slugs",
 } as const;
 
 const ALL_TAGS = Object.values(TAG);
@@ -160,4 +166,24 @@ export const getWeeklyGrowthCached = unstable_cache(
   _getWeeklyGrowth,
   [TAG.weeklyGrowth],
   { revalidate: 3600, tags: [TAG.weeklyGrowth] }
+);
+
+// ─── Per-model stats (for /stats/models/[model]) ────────────────────────────
+
+export const getModelDetailStatsCached = unstable_cache(
+  _getModelDetailStats,
+  [TAG.modelDetail],
+  { revalidate: 3600, tags: [TAG.modelDetail] }
+);
+
+export const getModelDailyTrendsCached = unstable_cache(
+  _getModelDailyTrends,
+  [TAG.modelDailyTrends],
+  { revalidate: 3600, tags: [TAG.modelDailyTrends] }
+);
+
+export const getDistinctModelSlugsCached = unstable_cache(
+  _getDistinctModelSlugs,
+  [TAG.modelSlugs],
+  { revalidate: 3600, tags: [TAG.modelSlugs] }
 );

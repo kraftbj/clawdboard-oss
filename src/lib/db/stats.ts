@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { dailyAggregates } from "./schema";
 import { sql } from "drizzle-orm";
 import type { Period, DateRange } from "./leaderboard";
 import { VALID_PERIODS, parseDateRange } from "./leaderboard";
@@ -217,6 +218,146 @@ export async function getModelStats(
   }));
 }
 
+// ─── Per-model queries (for /stats/models/[model] pages) ────────────────────
+
+export interface ModelDetailStats {
+  totalCost: string;
+  totalTokens: number;
+  inputTokens: number;
+  outputTokens: number;
+  cacheCreationTokens: number;
+  cacheReadTokens: number;
+  userCount: number;
+  costShare: number;
+  avgCostPerUser: string;
+  medianCostPerUser: string;
+  firstSeen: string | null;
+  rawModelIds: string[];
+}
+
+/** Detailed stats for all raw model IDs matching a slug prefix. */
+export async function getModelDetailStats(
+  slug: string
+): Promise<ModelDetailStats | null> {
+  const result = await db.execute(sql`
+    WITH matched AS (
+      SELECT
+        elem->>'modelName' AS raw_id,
+        (elem->>'cost')::numeric AS cost,
+        (elem->>'inputTokens')::bigint AS inp,
+        (elem->>'outputTokens')::bigint AS outp,
+        COALESCE((elem->>'cacheCreationTokens')::bigint, 0) AS cache_create,
+        COALESCE((elem->>'cacheReadTokens')::bigint, 0) AS cache_read,
+        da.user_id,
+        da.date
+      FROM daily_aggregates da,
+        jsonb_array_elements(da.model_breakdowns) AS elem
+      WHERE (
+        elem->>'modelName' = ${slug}
+        OR elem->>'modelName' ~ ('^' || ${slug} || '-[0-9]{6,8}$')
+      )
+    ),
+    grand_total AS (
+      SELECT COALESCE(SUM((elem->>'cost')::numeric), 0) AS total
+      FROM daily_aggregates da,
+        jsonb_array_elements(da.model_breakdowns) AS elem
+    ),
+    user_costs AS (
+      SELECT SUM(cost) AS c FROM matched GROUP BY user_id
+    )
+    SELECT
+      COALESCE(SUM(m.cost), 0)::text AS total_cost,
+      COALESCE(SUM(m.inp + m.outp), 0)::bigint AS total_tokens,
+      COALESCE(SUM(m.inp), 0)::bigint AS input_tokens,
+      COALESCE(SUM(m.outp), 0)::bigint AS output_tokens,
+      COALESCE(SUM(m.cache_create), 0)::bigint AS cache_creation_tokens,
+      COALESCE(SUM(m.cache_read), 0)::bigint AS cache_read_tokens,
+      COUNT(DISTINCT m.user_id)::int AS user_count,
+      CASE WHEN gt.total > 0
+        THEN ROUND(SUM(m.cost) / gt.total * 100, 1)::float
+        ELSE 0
+      END AS cost_share,
+      COALESCE((SELECT AVG(c) FROM user_costs), 0)::text AS avg_cost,
+      COALESCE((SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY c) FROM user_costs), 0)::text AS median_cost,
+      MIN(m.date)::text AS first_seen,
+      ARRAY_AGG(DISTINCT m.raw_id) AS raw_model_ids
+    FROM matched m, grand_total gt
+    GROUP BY gt.total
+  `);
+
+  const row = result.rows[0];
+  if (!row || Number(row.user_count ?? 0) === 0) return null;
+
+  return {
+    totalCost: String(row.total_cost ?? "0"),
+    totalTokens: Number(row.total_tokens ?? 0),
+    inputTokens: Number(row.input_tokens ?? 0),
+    outputTokens: Number(row.output_tokens ?? 0),
+    cacheCreationTokens: Number(row.cache_creation_tokens ?? 0),
+    cacheReadTokens: Number(row.cache_read_tokens ?? 0),
+    userCount: Number(row.user_count ?? 0),
+    costShare: Number(row.cost_share ?? 0),
+    avgCostPerUser: String(row.avg_cost ?? "0"),
+    medianCostPerUser: String(row.median_cost ?? "0"),
+    firstSeen: (row.first_seen as string) ?? null,
+    rawModelIds: (row.raw_model_ids as string[]) ?? [],
+  };
+}
+
+export interface ModelDailyTrend {
+  date: string;
+  cost: number;
+  tokens: number;
+  activeUsers: number;
+}
+
+/** Daily trends for a specific model slug (last N days). */
+export async function getModelDailyTrends(
+  slug: string,
+  days = 90
+): Promise<ModelDailyTrend[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+  const result = await db.execute(sql`
+    SELECT
+      da.date,
+      SUM((elem->>'cost')::numeric)::float AS cost,
+      SUM((elem->>'inputTokens')::bigint + (elem->>'outputTokens')::bigint)::bigint AS tokens,
+      COUNT(DISTINCT da.user_id)::int AS active_users
+    FROM daily_aggregates da,
+      jsonb_array_elements(da.model_breakdowns) AS elem
+    WHERE da.date >= ${cutoffStr}
+      AND (
+        elem->>'modelName' = ${slug}
+        OR elem->>'modelName' ~ ('^' || ${slug} || '-[0-9]{6,8}$')
+      )
+    GROUP BY da.date
+    ORDER BY da.date ASC
+  `);
+
+  return result.rows.map((row) => ({
+    date: String(row.date),
+    cost: Number(row.cost ?? 0),
+    tokens: Number(row.tokens ?? 0),
+    activeUsers: Number(row.active_users ?? 0),
+  }));
+}
+
+/** Get all distinct model slugs with enough data for a page. */
+export async function getDistinctModelSlugs(): Promise<string[]> {
+  const result = await db.execute(sql`
+    SELECT DISTINCT
+      regexp_replace(elem->>'modelName', '-[0-9]{6,8}$', '') AS slug
+    FROM daily_aggregates da,
+      jsonb_array_elements(da.model_breakdowns) AS elem
+    WHERE (elem->>'cost')::numeric > 0
+  `);
+
+  return result.rows.map((row) => String(row.slug));
+}
+
 /** Weekly new user growth */
 export async function getWeeklyGrowth(): Promise<GrowthPoint[]> {
   const result = await db.execute(sql`
@@ -240,5 +381,37 @@ export async function getWeeklyGrowth(): Promise<GrowthPoint[]> {
     week: String(row.week),
     newUsers: Number(row.new_users ?? 0),
     cumulativeUsers: Number(row.cumulative_users ?? 0),
+  }));
+}
+
+// ─── Source Breakdown ───────────────────────────────────────────────────────
+
+export interface SourceBreakdownEntry {
+  source: string;
+  totalCost: number;
+  totalTokens: number;
+  userCount: number;
+}
+
+/**
+ * Get aggregate usage broken down by data source (claude-code, opencode, codex).
+ * Rows with null source are grouped as "claude-code" (legacy data).
+ */
+export async function getSourceBreakdown(): Promise<SourceBreakdownEntry[]> {
+  const rows = await db
+    .select({
+      source: sql<string>`COALESCE(${dailyAggregates.source}, 'claude-code')`.as("source"),
+      totalCost: sql<number>`COALESCE(SUM(${dailyAggregates.totalCost}::numeric), 0)`.as("total_cost"),
+      totalTokens: sql<number>`COALESCE(SUM(${dailyAggregates.inputTokens} + ${dailyAggregates.outputTokens} + ${dailyAggregates.cacheCreationTokens} + ${dailyAggregates.cacheReadTokens}), 0)`.as("total_tokens"),
+      userCount: sql<number>`COUNT(DISTINCT ${dailyAggregates.userId})`.as("user_count"),
+    })
+    .from(dailyAggregates)
+    .groupBy(sql`COALESCE(${dailyAggregates.source}, 'claude-code')`);
+
+  return rows.map((r) => ({
+    source: r.source,
+    totalCost: Number(r.totalCost),
+    totalTokens: Number(r.totalTokens),
+    userCount: Number(r.userCount),
   }));
 }
