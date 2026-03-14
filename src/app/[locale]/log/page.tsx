@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/layout/Header";
-import { logEntries } from "@/lib/log-entries";
+import { logEntries, type LogEntry } from "@/lib/log-entries";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://clawdboard.ai";
 
@@ -19,9 +19,9 @@ const TYPE_CONFIG = {
   improvement: { label: "improvement", color: "text-accent", border: "border-accent/30", bg: "bg-accent-glow" },
 } as const;
 
-/** Group entries by month */
-function groupByMonth(entries: typeof logEntries) {
-  const groups: { month: string; entries: typeof logEntries }[] = [];
+/** Group date entries by month */
+function groupByMonth(entries: LogEntry[]) {
+  const groups: { month: string; entries: LogEntry[] }[] = [];
   for (const entry of entries) {
     const d = new Date(entry.date + "T00:00:00");
     const month = d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
@@ -93,10 +93,9 @@ export default function LogPage() {
                 </h2>
               </div>
 
-              {/* Entries */}
+              {/* Date entries */}
               <div className="ml-[7px] border-l border-border-bright pl-8 space-y-8">
-                {group.entries.map((entry, i) => {
-                  const config = TYPE_CONFIG[entry.type];
+                {group.entries.map((entry) => {
                   const d = new Date(entry.date + "T00:00:00");
                   const day = d.toLocaleDateString("en-US", {
                     month: "short",
@@ -104,48 +103,59 @@ export default function LogPage() {
                   });
 
                   return (
-                    <article key={`${entry.date}-${i}`} className="group relative">
-                      {/* Dot on timeline */}
-                      <div className="absolute -left-[calc(2rem+4.5px)] top-[6px] h-[9px] w-[9px] rounded-full bg-border-bright group-hover:bg-accent transition-colors" />
-
-                      {/* Date + type badge */}
-                      <div className="flex items-center gap-3 mb-2">
+                    <div key={entry.date} className="space-y-6">
+                      {/* Date marker */}
+                      <div className="relative">
+                        <div className="absolute -left-[calc(2rem+4.5px)] top-[6px] h-[9px] w-[9px] rounded-full bg-border-bright" />
                         <time
                           dateTime={entry.date}
                           className="font-mono text-xs text-dim"
                         >
                           {day}
                         </time>
-                        <span
-                          className={`inline-block rounded-full border px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${config.color} ${config.border} ${config.bg}`}
-                        >
-                          {config.label}
-                        </span>
                       </div>
 
-                      {/* Title */}
-                      <h3 className="font-display text-base font-semibold text-foreground mb-1.5 group-hover:text-accent transition-colors">
-                        {entry.title}
-                      </h3>
+                      {/* Items for this date */}
+                      {entry.items.map((item, i) => {
+                        const config = TYPE_CONFIG[item.type];
 
-                      {/* Description */}
-                      <p className="font-mono text-sm leading-relaxed text-muted">
-                        {entry.description}
-                      </p>
+                        return (
+                          <article key={i} className="group relative">
+                            {/* Type badge */}
+                            <div className="mb-2">
+                              <span
+                                className={`inline-block rounded-full border px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${config.color} ${config.border} ${config.bg}`}
+                              >
+                                {config.label}
+                              </span>
+                            </div>
 
-                      {/* Optional image */}
-                      {entry.image && (
-                        <div className="mt-4 overflow-hidden rounded-lg border border-border-bright">
-                          <Image
-                            src={entry.image}
-                            alt={entry.title}
-                            width={720}
-                            height={400}
-                            className="w-full h-auto"
-                          />
-                        </div>
-                      )}
-                    </article>
+                            {/* Title */}
+                            <h3 className="font-display text-base font-semibold text-foreground mb-1.5 group-hover:text-accent transition-colors">
+                              {item.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="font-mono text-sm leading-relaxed text-muted">
+                              {item.description}
+                            </p>
+
+                            {/* Optional image */}
+                            {item.image && (
+                              <div className="mt-4 overflow-hidden rounded-lg border border-border-bright">
+                                <Image
+                                  src={item.image}
+                                  alt={item.title}
+                                  width={720}
+                                  height={400}
+                                  className="w-full h-auto"
+                                />
+                              </div>
+                            )}
+                          </article>
+                        );
+                      })}
+                    </div>
                   );
                 })}
               </div>
