@@ -2,7 +2,7 @@
   "metadata": {
     "home": {
       "title": "clawdboard -- Classement d'utilisation de codage IA",
-      "description": "Classement de codage IA. Suivez et comparez l'utilisation, les couts estimes, les tokens, les series et les repartitions de modeles entre developpeurs."
+      "description": "Classement de codage IA. Suivez et comparez l'utilisation, les couts estimes, les tokens, les series et les repartitions de modeles entre developpeurs. Supporte Claude Code, OpenCode et Codex CLI."
     },
     "faq": {
       "title": "FAQ",
@@ -19,10 +19,6 @@
     "signin": {
       "title": "Connexion",
       "description": "Connectez-vous a clawdboard avec GitHub"
-    },
-    "stats": {
-      "title": "Statistiques d'utilisation de codage IA",
-      "description": "Donnees reelles d'utilisation de codage IA provenant de centaines de developpeurs. Depenses totales, popularite des modeles, tendances et croissance."
     }
   },
   "common": {
@@ -51,7 +47,6 @@
   },
   "footer": {
     "tagline": "classement codage IA",
-    "stats": "Stats",
     "faq": "FAQ",
     "privacy": "Confidentialite",
     "terms": "Conditions",
@@ -178,7 +173,7 @@
   },
   "leaderboard": {
     "heading": "Classement d'utilisation de codage IA",
-    "seoIntro": "Le classement communautaire des outils de codage IA. Suivez vos depenses, comparez l'utilisation entre developpeurs et decouvrez qui code le plus avec l'IA. Gratuit — synchronisez vos statistiques en une commande.",
+    "seoIntro": "Le classement communautaire des outils de codage IA — Claude Code, OpenCode et Codex CLI. Suivez vos depenses, comparez l'utilisation entre developpeurs et decouvrez qui code le plus avec l'IA. Gratuit — synchronisez vos statistiques en une commande.",
     "individuals": "Individus",
     "teams": "Teams",
     "vibeCodersOnBoard": "{count} vibe coders au classement",
@@ -377,7 +372,7 @@
     "q8": "Mes donnees sont-elles privees ?",
     "a8": "Le CLI applique une liste blanche de confidentialite stricte -- seuls les comptages de tokens et les couts agreges quittent votre machine. Aucun code, prompt ou contexte de projet n'est jamais transmis. Votre profil sur clawdboard n'affiche que les metriques que vous avez synchronisees.",
     "q9": "D'ou viennent les donnees ?",
-    "a9": "ccusage lit les fichiers de journalisation JSONL que les outils de codage IA stockent localement sur votre machine (par ex. Claude Code dans ~/.claude/, OpenCode et Codex dans leurs repertoires respectifs). Aucun appel API n'est effectue -- tout est analyse a partir de vos journaux locaux.",
+    "a9": "ccusage lit les fichiers de journalisation locaux que les outils de codage IA stockent sur votre machine (par ex. Claude Code dans ~/.claude/, OpenCode et Codex dans leurs repertoires respectifs). Aucun appel API n'est effectue -- tout est analyse a partir de vos journaux locaux.",
     "q10": "Que signifie le chiffre \"cout\" ?",
     "a10": "C'est le cout estime de votre utilisation de tokens aux tarifs API publies (Anthropic, OpenAI, etc.). C'est une estimation calculee, pas une facture reelle. Considerez-le comme un indicateur de l'intensite de votre utilisation des outils de codage IA.",
     "q11": "Comment les series sont-elles calculees ?",
@@ -386,7 +381,7 @@
     "a12": "Par defaut, les utilisateurs sont classes par cout estime (le plus eleve en premier). Vous pouvez aussi trier par tokens totaux, nombre de jours actifs ou serie actuelle. Chaque colonne est triable, et vous pouvez filtrer par periode (7j, 30j, ce mois, depuis le debut de l'annee ou une plage personnalisee).",
     "q13": "clawdboard suit-il l'utilisation API de mes propres applications ?",
     "a13": "Non. Seule l'utilisation des outils de codage IA supportes (Claude Code, OpenCode, Codex CLI) est suivie. Si vous appelez des APIs directement depuis votre propre code, cette utilisation est completement separee et non incluse dans clawdboard.",
-    "q14": "Quels modeles Claude sont suivis ?",
+    "q14": "Quels modeles sont suivis ?",
     "a14": "Tous les modeles disponibles via les outils de codage IA supportes -- y compris Sonnet, Opus et Haiku de Claude, ainsi que GPT-4o et les modeles o-series d'OpenAI. Votre page de profil affiche une repartition detaillee des modeles que vous avez utilises et de leur proportion.",
     "q15": "Qu'est-ce que le plugin clawdboard ?",
     "a15": "C'est un plugin Claude Code qui ajoute les commandes /sync, /stats et /leaderboard directement dans Claude Code. Il synchronise aussi automatiquement votre utilisation toutes les 2 heures via un hook en arriere-plan -- pour que vos statistiques restent a jour sans effort manuel.",

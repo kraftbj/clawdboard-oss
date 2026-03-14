@@ -2,7 +2,7 @@
   "metadata": {
     "home": {
       "title": "clawdboard -- KI-Coding Nutzungs-Rangliste",
-      "description": "KI-Coding Rangliste. Verfolge und vergleiche Nutzung, geschatzte Kosten, Tokens, Serien und Modellverteilungen unter Entwicklern."
+      "description": "KI-Coding Rangliste. Verfolge und vergleiche Nutzung, geschatzte Kosten, Tokens, Serien und Modellverteilungen unter Entwicklern. Unterstutzt Claude Code, OpenCode & Codex CLI."
     },
     "faq": {
       "title": "FAQ",
@@ -19,10 +19,6 @@
     "signin": {
       "title": "Anmelden",
       "description": "Melde dich bei clawdboard mit GitHub an"
-    },
-    "stats": {
-      "title": "KI-Coding Nutzungsstatistiken",
-      "description": "Echte KI-Coding Nutzungsdaten von Hunderten Entwicklern. Gesamtausgaben, Modellpopularitat, tagliche Trends und Wachstum."
     }
   },
   "common": {
@@ -51,7 +47,6 @@
   },
   "footer": {
     "tagline": "KI-Coding Rangliste",
-    "stats": "Stats",
     "faq": "FAQ",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
@@ -80,7 +75,7 @@
   },
   "leaderboard": {
     "heading": "KI-Coding Nutzungs-Rangliste",
-    "seoIntro": "Die Community-Rangliste fur KI-Coding-Tools. Verfolge deine Ausgaben, vergleiche die Nutzung unter Entwicklern und sieh, wer am meisten mit KI-gestutztem Coding liefert. Kostenlos — synchronisiere deine Statistiken mit einem Befehl.",
+    "seoIntro": "Die Community-Rangliste fur KI-Coding-Tools — Claude Code, OpenCode & Codex CLI. Verfolge deine Ausgaben, vergleiche die Nutzung unter Entwicklern und sieh, wer am meisten mit KI-gestutztem Coding liefert. Kostenlos — synchronisiere deine Statistiken mit einem Befehl.",
     "individuals": "Einzelpersonen",
     "teams": "Teams",
     "vibeCodersOnBoard": "{count} Vibe Coders in der Rangliste",
@@ -377,7 +372,7 @@
     "q8": "Sind meine Daten privat?",
     "a8": "Das CLI erzwingt eine strenge Datenschutz-Positivliste -- nur aggregierte Token-Zahlen und Kosten verlassen deinen Rechner. Kein Code, keine Prompts oder Projektkontexte werden jemals ubertragen. Dein Profil auf clawdboard zeigt nur die Metriken, die du synchronisiert hast.",
     "q9": "Woher kommen die Daten?",
-    "a9": "ccusage liest die JSONL-Protokolldateien, die KI-Coding-Tools lokal auf deinem Rechner speichern (z.B. Claude Code in ~/.claude/, OpenCode und Codex in ihren jeweiligen Verzeichnissen). Es werden keine API-Aufrufe gemacht -- alles wird aus deinen lokalen Protokollen ausgelesen.",
+    "a9": "ccusage liest die lokalen Protokolldateien, die KI-Coding-Tools auf deinem Rechner speichern (z.B. Claude Code in ~/.claude/, OpenCode und Codex in ihren jeweiligen Verzeichnissen). Es werden keine API-Aufrufe gemacht -- alles wird aus deinen lokalen Protokollen ausgelesen.",
     "q10": "Was bedeutet die Zahl \"Kosten\"?",
     "a10": "Es sind die geschatzten Kosten deiner Token-Nutzung zu veroffentlichten API-Tarifen (Anthropic, OpenAI usw.). Dies ist eine berechnete Schatzung, keine tatsachliche Rechnung. Betrachte es als Indikator dafur, wie intensiv du KI-Coding-Tools nutzt.",
     "q11": "Wie werden Serien berechnet?",
@@ -386,7 +381,7 @@
     "a12": "Standardmassig werden Benutzer nach geschatzten Kosten sortiert (hochste zuerst). Du kannst auch nach Gesamt-Tokens, Anzahl aktiver Tage oder aktueller Serie sortieren. Jede Spalte ist sortierbar, und du kannst nach Zeitraum filtern (7T, 30T, dieser Monat, seit Jahresbeginn oder ein benutzerdefinierter Zeitraum).",
     "q13": "Verfolgt clawdboard die API-Nutzung meiner eigenen Apps?",
     "a13": "Nein. Nur die Nutzung von unterstutzten KI-Coding-Tools (Claude Code, OpenCode, Codex CLI) wird verfolgt. Wenn du APIs direkt aus deinem eigenen Code aufrufst, ist diese Nutzung vollig getrennt und nicht in clawdboard enthalten.",
-    "q14": "Welche Claude-Modelle werden verfolgt?",
+    "q14": "Welche Modelle werden verfolgt?",
     "a14": "Alle uber unterstutzte KI-Coding-Tools verfugbaren Modelle -- einschliesslich Claudes Sonnet, Opus und Haiku sowie OpenAIs GPT-4o und o-Serien-Modelle. Deine Profilseite zeigt eine detaillierte Aufschlusselung, welche Modelle du wie stark genutzt hast.",
     "q15": "Was ist das clawdboard-Plugin?",
     "a15": "Es ist ein Claude Code Plugin, das die Slash-Befehle /sync, /stats und /leaderboard direkt in Claude Code hinzufugt. Es synchronisiert auch automatisch deine Nutzung alle 2 Stunden uber einen Hintergrund-Hook -- damit deine Statistiken ohne manuellen Aufwand aktuell bleiben.",

@@ -24,24 +24,27 @@ export async function generateMetadata(): Promise<Metadata> {
   const cost = formatNumber(parseFloat(stats.totalCost));
 
   return {
-    title: `Claude Code Usage Statistics — Live Data from ${userCount}+ Developers`,
-    description: `How much does Claude Code cost? Real data from ${userCount}+ developers: $${cost}+ total spend, model breakdowns (Opus vs Sonnet vs Haiku), daily usage trends, and community growth. Updated hourly from opt-in usage logs.`,
+    title: `AI Coding Usage Statistics — Live Data from ${userCount}+ Developers`,
+    description: `How much does AI coding cost? Real data from ${userCount}+ developers using Claude Code, OpenCode & Codex CLI: $${cost}+ total spend, model breakdowns, daily usage trends, and community growth. Updated hourly from opt-in usage logs.`,
     alternates: { canonical: `${BASE_URL}/stats` },
     openGraph: {
-      title: `Claude Code Usage Statistics — ${userCount}+ Developers`,
+      title: `AI Coding Usage Statistics — ${userCount}+ Developers`,
       description: `Live usage data: $${cost}+ total spend, ${formatNumber(stats.totalTokens)}+ tokens across ${userCount} developers.`,
       type: "website",
     },
     keywords: [
-      "claude code usage",
-      "claude code cost",
-      "claude code statistics",
-      "vibecoding usage",
+      "ai coding usage",
       "ai coding cost",
+      "ai coding tool usage statistics",
+      "ai coding statistics",
+      "vibecoding statistics",
+      "vibecoding usage",
+      "claude code cost",
       "claude opus usage",
       "claude sonnet usage",
       "ai agent usage statistics",
-      "claude code spending",
+      "opencode usage",
+      "codex cli usage",
       "vibecoding leaderboard",
     ],
   };
@@ -89,36 +92,36 @@ function getStatsFaqs(stats: {
 }) {
   return [
     {
-      q: "How much does Claude Code cost per month?",
-      a: `Based on data from ${stats.totalUsers.toLocaleString()} developers on clawdboard, the average estimated usage cost is ${stats.avgCost} total (not per month). The median is ${stats.medianCost}, meaning half of developers spend less than that. These are estimated API-equivalent costs — most developers pay a flat monthly fee through Anthropic's Pro ($20/mo) or Max ($100-200/mo) subscriptions, not per-token billing.`,
+      q: "How much does AI coding cost per month?",
+      a: `Based on data from ${stats.totalUsers.toLocaleString()} developers on clawdboard, the average estimated AI coding usage cost is ${stats.avgCost} total (not per month). The median is ${stats.medianCost}, meaning half of developers spend less than that. These are estimated API-equivalent costs — most developers pay flat monthly fees through provider subscriptions, not per-token billing.`,
     },
     {
-      q: "What is the most popular Claude model for coding?",
-      a: "Model popularity varies over time as Anthropic releases new versions. Check the Model Popularity chart above for the latest breakdown by cost share and user count. Historically, Sonnet models see the highest volume due to their speed-to-quality ratio, while Opus models account for a significant share of total spend due to higher per-token pricing.",
+      q: "What are the most popular AI models for coding?",
+      a: "Model popularity varies over time as providers release new versions. Check the Model Popularity chart above for the latest breakdown by cost share and user count. Among Claude models, Sonnet tends to see the highest volume due to its speed-to-quality ratio, while Opus accounts for a significant share of total spend due to higher per-token pricing. OpenAI models like GPT-4o and o-series are also tracked for Codex CLI and OpenCode users.",
     },
     {
       q: "Where does this usage data come from?",
-      a: "Every data point comes from developers who voluntarily track their Claude Code usage through clawdboard. The clawdboard CLI reads local JSONL log files that Claude Code stores in ~/.claude/ on each developer's machine, extracts aggregate token counts and cost estimates, and syncs them. No code, prompts, project names, or conversation content is ever collected — only token counts and estimated costs.",
+      a: "Every data point comes from developers who voluntarily track their AI coding usage through clawdboard. The clawdboard CLI reads local log files from supported tools (Claude Code, OpenCode, Codex CLI) on each developer's machine, extracts aggregate token counts and cost estimates, and syncs them. No code, prompts, project names, or conversation content is ever collected — only token counts and estimated costs.",
     },
     {
       q: "How accurate are the cost estimates?",
-      a: "Cost estimates are calculated by multiplying token counts (input, output, cache creation, cache read) by Anthropic's published API rates for each model. They represent the equivalent API cost — not an actual bill. Since most developers use Claude Code through Pro or Max subscriptions with flat monthly pricing, the actual amount paid is typically lower than the estimated API-equivalent cost shown here.",
+      a: "Cost estimates are calculated by multiplying token counts (input, output, cache creation, cache read) by published API rates for each model (Anthropic, OpenAI, etc.). They represent the equivalent API cost — not an actual bill. Since most developers use AI coding tools through subscriptions with flat monthly pricing, the actual amount paid is typically lower than the estimated API-equivalent cost shown here.",
     },
     {
       q: "How often is this data updated?",
-      a: "Individual developers sync their usage every 2 hours by default. The aggregate statistics on this page are recalculated hourly. The data covers all usage since January 2024, when Claude Code was first released.",
+      a: "Individual developers sync their usage every 2 hours by default. The aggregate statistics on this page are recalculated hourly. The data covers all usage since January 2024.",
     },
     {
       q: "What is a streak and how is it calculated?",
-      a: `A streak counts consecutive calendar days where a developer used Claude Code at least once. Missing a single day resets the streak. The longest active streak in the community is currently ${stats.longestStreak} days. You can see individual streaks on the leaderboard and profile pages.`,
+      a: `A streak counts consecutive calendar days where a developer used AI coding tools at least once. Missing a single day resets the streak. The longest active streak in the community is currently ${stats.longestStreak} days. You can see individual streaks on the leaderboard and profile pages.`,
     },
     {
       q: "Can I access this data programmatically?",
       a: `Yes. clawdboard provides a free public API at ${BASE_URL}/api/stats that returns community-wide aggregate statistics including total spend, token counts, model breakdowns, and methodology notes. The API is rate-limited to 15 requests per minute and returns JSON. The leaderboard API at ${BASE_URL}/api/leaderboard is also public.`,
     },
     {
-      q: "Is this data representative of all Claude Code users?",
-      a: "No. This is a self-selected sample of developers who choose to track and share their usage on clawdboard. It likely skews toward heavier users and early adopters. It should not be interpreted as representative of all Claude Code users, but it does provide the largest public dataset of real Claude Code usage patterns available.",
+      q: "Is this data representative of all AI coding tool users?",
+      a: "No. This is a self-selected sample of developers who choose to track and share their usage on clawdboard. It likely skews toward heavier users and early adopters. It should not be interpreted as representative of all AI coding tool users, but it does provide the largest public dataset of real AI coding usage patterns available.",
     },
   ];
 }
@@ -162,8 +165,8 @@ export default async function StatsPage() {
   const datasetLd = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Claude Code Community Usage Statistics",
-    description: `Aggregated Claude Code usage data from ${stats.totalUsers}+ developers including cost estimates, token consumption, model popularity, and daily activity trends. Updated hourly.`,
+    name: "AI Coding Tool Community Usage Statistics",
+    description: `Aggregated AI coding tool usage data from ${stats.totalUsers}+ developers — covering Claude Code, OpenCode, and Codex CLI — including cost estimates, token consumption, model popularity, and daily activity trends. Updated hourly.`,
     url: `${BASE_URL}/stats`,
     dateModified: new Date().toISOString(),
     temporalCoverage: "2024-01-01/..",
@@ -241,18 +244,19 @@ export default async function StatsPage() {
         <div className="mb-8">
           <h1 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
             <span className="text-accent mr-2">&gt;</span>
-            Claude Code Usage Statistics
+            AI Coding Usage Statistics
           </h1>
           <p className="mt-2 font-mono text-sm leading-relaxed text-muted max-w-3xl">
             Real-time aggregate data from{" "}
             <strong className="text-foreground">
               {stats.totalUsers.toLocaleString()} developers
             </strong>{" "}
-            who track their Claude Code usage on{" "}
+            who track their AI coding usage on{" "}
             <Link href="/" className="text-accent hover:underline">
               clawdboard
             </Link>
-            . All cost figures are estimates based on Anthropic&apos;s published
+            . Tracks Claude Code, OpenCode, and Codex CLI usage.
+            All cost figures are estimates based on published
             API token pricing — not actual bills. Data covers all usage since
             January 2024.
           </p>
@@ -275,7 +279,7 @@ export default async function StatsPage() {
             Community Overview
           </h2>
           <p className="font-mono text-xs text-muted mb-4">
-            Aggregate Claude Code usage across all {stats.totalUsers.toLocaleString()} registered
+            Aggregate AI coding usage across all {stats.totalUsers.toLocaleString()} registered
             developers since January 2024.
           </p>
 
@@ -315,7 +319,7 @@ export default async function StatsPage() {
             <StatCard
               label="Longest Active Streak"
               value={`${stats.longestStreak}d`}
-              sub="consecutive days coding with Claude"
+              sub="consecutive days coding with AI"
             />
             <StatCard
               label="Most Used Model"
@@ -332,13 +336,13 @@ export default async function StatsPage() {
         {/* ── Daily usage trends ──────────────────────────────────────────── */}
         <section className="mb-10" aria-labelledby="trends-heading">
           <h2 id="trends-heading" className="text-lg font-semibold text-foreground mb-1">
-            Daily Claude Code Usage Trends
+            Daily AI Coding Usage Trends
           </h2>
           <p className="font-mono text-xs text-muted mb-4">
-            How much are developers spending on Claude Code each day? This chart
+            How much are developers spending on AI coding each day? This chart
             shows the 7-day moving average of estimated daily cost and active
             user count over the last {trends.length} days. Spikes often
-            correspond to new Claude model releases or major feature updates.
+            correspond to new model releases or major tool updates.
           </p>
           <CommunityTrendChart data={trends} />
         </section>
@@ -346,14 +350,15 @@ export default async function StatsPage() {
         {/* ── Model breakdown ─────────────────────────────────────────────── */}
         <section className="mb-10" aria-labelledby="models-heading">
           <h2 id="models-heading" className="text-lg font-semibold text-foreground mb-1">
-            Claude Model Popularity: Opus vs Sonnet vs Haiku
+            AI Model Popularity by Cost Share
           </h2>
           <p className="font-mono text-xs text-muted mb-4">
-            Which Claude models do developers actually use for coding? This
+            Which AI models do developers actually use for coding? This
             breakdown shows estimated cost and token consumption per model
-            across all users. Cost share reflects how much of total community
-            spend goes to each model — higher-tier models like Opus cost more
-            per token, so they can dominate spend even with fewer users.
+            across all users — including Claude (Opus, Sonnet, Haiku), OpenAI
+            (GPT-4o, o-series), and others. Cost share reflects how much of
+            total community spend goes to each model — higher-tier models cost
+            more per token, so they can dominate spend even with fewer users.
           </p>
           <ModelShareChart data={models} />
         </section>
@@ -364,15 +369,15 @@ export default async function StatsPage() {
             Community Growth
           </h2>
           <p className="font-mono text-xs text-muted mb-4">
-            How fast is the Claude Code developer community growing? This chart
+            How fast is the AI coding developer community growing? This chart
             tracks cumulative registrations on clawdboard by week. Growth
-            accelerates around major Claude model releases and developer tool
-            announcements.
+            accelerates around major model releases, new tool launches, and
+            developer announcements.
           </p>
           <GrowthChart data={growth} />
         </section>
 
-        {/* ── Analysis: How much does Claude Code cost? ───────────────────── */}
+        {/* ── Analysis: How much does AI coding cost? ──────────────────────── */}
         <section
           className="mb-10 rounded-lg border border-border bg-surface p-6"
           aria-labelledby="cost-heading"
@@ -381,13 +386,13 @@ export default async function StatsPage() {
             id="cost-heading"
             className="text-lg font-semibold text-foreground mb-3"
           >
-            How Much Does Claude Code Actually Cost?
+            How Much Does AI Coding Actually Cost?
           </h2>
           <div className="space-y-3 font-mono text-sm leading-relaxed text-muted">
             <p>
               Based on data from{" "}
               {stats.totalUsers.toLocaleString()} developers, the average
-              Claude Code user has an estimated all-time usage of{" "}
+              AI coding user has an estimated all-time usage of{" "}
               <strong className="text-foreground">
                 {formatCurrency(avgCost)}
               </strong>{" "}
@@ -396,13 +401,12 @@ export default async function StatsPage() {
                 {formatCurrency(medianCost)}
               </strong>
               , reflecting the wide gap between casual users and power users who
-              run Claude Code daily for extended sessions.
+              run AI coding tools daily for extended sessions.
             </p>
             <p>
               These are not actual bills. They represent what the same token
               usage would cost at Anthropic&apos;s published API rates. Most
-              Claude Code users pay a flat monthly subscription — $20/month for
-              Pro or $100-200/month for Max — rather than per-token billing.
+              AI coding tool users pay flat monthly subscriptions rather than per-token billing.
               The estimated cost is useful for comparing relative usage
               intensity across developers and understanding which models
               consume the most resources.
@@ -412,7 +416,7 @@ export default async function StatsPage() {
               <strong className="text-foreground">
                 {stats.totalActiveDays.toLocaleString()} active days
               </strong>{" "}
-              of Claude Code usage, with the longest consecutive streak
+              of AI coding usage, with the longest consecutive streak
               reaching{" "}
               <strong className="text-foreground">
                 {stats.longestStreak} days
@@ -458,7 +462,7 @@ export default async function StatsPage() {
           <div className="space-y-3 font-mono text-sm leading-relaxed text-muted">
             <p>
               All data on this page comes from developers who voluntarily track
-              their Claude Code usage through{" "}
+              their AI coding usage through{" "}
               <Link href="/" className="text-accent hover:underline">
                 clawdboard
               </Link>
@@ -471,8 +475,8 @@ export default async function StatsPage() {
               >
                 clawdboard CLI
               </a>{" "}
-              reads the JSONL log files that Claude Code stores locally in{" "}
-              <code className="text-foreground/80">~/.claude/</code> on each
+              reads local log files from supported tools — Claude Code,
+              OpenCode, and Codex CLI — on each
               developer&apos;s machine. It extracts aggregate token counts
               (input, output, cache creation, cache read) and the model used
               for each session.
@@ -481,8 +485,8 @@ export default async function StatsPage() {
               <strong className="text-foreground">
                 Cost estimation:
               </strong>{" "}
-              Token counts are multiplied by Anthropic&apos;s published API
-              rates for each model at the time of the session. This gives the
+              Token counts are multiplied by published API
+              rates (Anthropic, OpenAI, etc.) for each model at the time of the session. This gives the
               API-equivalent cost — useful for comparison, but not what
               subscription users actually pay.
             </p>
@@ -501,7 +505,7 @@ export default async function StatsPage() {
               a self-selected sample of {stats.totalUsers.toLocaleString()}{" "}
               developers, likely skewing toward heavier users and early
               adopters. It should not be interpreted as representative of all
-              Claude Code users.
+              AI coding tool users.
             </p>
           </div>
         </section>
@@ -559,10 +563,10 @@ GET ${BASE_URL}/api/leaderboard?period=7d&sort=cost&limit=10`}</code>
             id="faq-heading"
             className="text-lg font-semibold text-foreground mb-1"
           >
-            Frequently Asked Questions About Claude Code Usage
+            Frequently Asked Questions About AI Coding Usage
           </h2>
           <p className="font-mono text-xs text-muted mb-6">
-            Common questions about Claude Code costs, model usage, and how this
+            Common questions about AI coding costs, model usage, and how this
             data is collected.
           </p>
 
@@ -608,7 +612,7 @@ GET ${BASE_URL}/api/leaderboard?period=7d&sort=cost&limit=10`}</code>
             id="cta-heading"
             className="font-display text-lg font-bold text-foreground mb-2"
           >
-            Track Your Own Claude Code Usage
+            Track Your Own AI Coding Usage
           </h2>
           <p className="font-mono text-sm text-muted mb-4">
             Join {stats.totalUsers.toLocaleString()} developers on the

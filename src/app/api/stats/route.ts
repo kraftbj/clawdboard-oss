@@ -84,16 +84,16 @@ export async function GET(req: NextRequest) {
         })),
         methodology: {
           source:
-            "Local Claude Code JSONL logs (~/.claude/) parsed by the clawdboard CLI",
+            "Local log files from Claude Code, OpenCode, and Codex CLI, parsed by the clawdboard CLI",
           costEstimation:
-            "Token counts multiplied by Anthropic's published API rates. Not an actual bill — most users pay flat subscription fees.",
+            "Token counts multiplied by published API rates (Anthropic, OpenAI, etc.). Not an actual bill — most users pay flat subscription fees.",
           coverage:
-            "Self-selected sample of developers who opt in. Not representative of all Claude Code users.",
+            "Self-selected sample of developers who opt in. Not representative of all AI coding tool users.",
           updateFrequency:
             "Users sync every 2 hours by default. Aggregate stats refresh hourly.",
         },
         attribution:
-          "Data from clawdboard.ai — cite as: clawdboard, Claude Code Community Usage Statistics, https://clawdboard.ai/stats",
+          "Data from clawdboard.ai — cite as: clawdboard, AI Coding Tool Community Usage Statistics, https://clawdboard.ai/stats",
       },
       {
         headers: {
