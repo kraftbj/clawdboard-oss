@@ -112,24 +112,11 @@ export async function getCommunityStats(
           COALESCE(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY c), 0)::text AS median_cost
         FROM user_costs
       `),
-      // 4. Longest current streak (always all-time — streaks don't make sense filtered)
+      // 4. Longest current streak — read from the materialized view
+      // (pre-computed hourly by the cron job, same algorithm)
       db.execute(sql`
-        WITH streak_days AS (
-          SELECT DISTINCT user_id, date::date AS d FROM daily_aggregates
-        ),
-        streak_groups AS (
-          SELECT user_id, d,
-            d - (ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY d))::int AS grp
-          FROM streak_days
-        ),
-        streak_lengths AS (
-          SELECT user_id, COUNT(*)::int AS streak_len, MAX(d) AS streak_end
-          FROM streak_groups
-          GROUP BY user_id, grp
-        )
-        SELECT COALESCE(MAX(streak_len), 0)::int AS longest
-        FROM streak_lengths
-        WHERE streak_end >= CURRENT_DATE - 1
+        SELECT COALESCE(MAX(current_streak), 0)::int AS longest
+        FROM leaderboard_mv
       `),
     ]);
 
