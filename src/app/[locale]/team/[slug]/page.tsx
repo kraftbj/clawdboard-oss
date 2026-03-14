@@ -67,8 +67,8 @@ export async function generateMetadata({
   if (!team) return { title: "Team Not Found" };
 
   const stats = await getTeamStats(team.id);
-  const title = `${team.name} — Team Claude Code Usage & Stats`;
-  const description = `See ${team.name}'s Claude Code usage — ${stats.memberCount} members, ${fmtCost(stats.totalCost)} total spend, ${stats.activeDays} active days. View the full breakdown on clawdboard.`;
+  const title = `${team.name} — Team AI Coding Usage & Stats`;
+  const description = `See ${team.name}'s AI coding usage — ${stats.memberCount} members, ${fmtCost(stats.totalCost)} total spend, ${stats.activeDays} active days. View the full breakdown on clawdboard.`;
 
   return {
     title,

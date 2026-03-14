@@ -25,7 +25,7 @@ export async function generateMetadata({
   const teamName = team?.name ?? "Team";
   return {
     title: `Join ${teamName} on clawdboard`,
-    description: `You've been invited to join ${teamName}. Track and compare your team's Claude Code usage, costs, and streaks on clawdboard.`,
+    description: `You've been invited to join ${teamName}. Track and compare your team's AI coding usage, costs, and streaks on clawdboard.`,
   };
 }
 

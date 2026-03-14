@@ -44,12 +44,12 @@ export const MAX_PINNED_BADGES = 5;
 
 export const BADGES: BadgeDefinition[] = [
   // ── All Time: Spend ──
-  { id: "spend-100", category: "all-time", group: "spend", label: "$100 Lifetime", description: "Spent $100 total on Claude Code", threshold: 100, xp: 5, celebrationTier: false },
-  { id: "spend-500", category: "all-time", group: "spend", label: "$500 Lifetime", description: "Spent $500 total on Claude Code", threshold: 500, xp: 8, celebrationTier: false },
-  { id: "spend-1k", category: "all-time", group: "spend", label: "$1K Lifetime", description: "Spent $1,000 total on Claude Code", threshold: 1000, xp: 12, celebrationTier: true },
-  { id: "spend-5k", category: "all-time", group: "spend", label: "$5K Lifetime", description: "Spent $5,000 total on Claude Code", threshold: 5000, xp: 18, celebrationTier: true },
-  { id: "spend-10k", category: "all-time", group: "spend", label: "$10K Lifetime", description: "Spent $10,000 total on Claude Code", threshold: 10000, xp: 25, celebrationTier: true },
-  { id: "spend-25k", category: "all-time", group: "spend", label: "$25K Lifetime", description: "Spent $25,000 total on Claude Code", threshold: 25000, xp: 35, celebrationTier: true },
+  { id: "spend-100", category: "all-time", group: "spend", label: "$100 Lifetime", description: "Spent $100 total on AI coding", threshold: 100, xp: 5, celebrationTier: false },
+  { id: "spend-500", category: "all-time", group: "spend", label: "$500 Lifetime", description: "Spent $500 total on AI coding", threshold: 500, xp: 8, celebrationTier: false },
+  { id: "spend-1k", category: "all-time", group: "spend", label: "$1K Lifetime", description: "Spent $1,000 total on AI coding", threshold: 1000, xp: 12, celebrationTier: true },
+  { id: "spend-5k", category: "all-time", group: "spend", label: "$5K Lifetime", description: "Spent $5,000 total on AI coding", threshold: 5000, xp: 18, celebrationTier: true },
+  { id: "spend-10k", category: "all-time", group: "spend", label: "$10K Lifetime", description: "Spent $10,000 total on AI coding", threshold: 10000, xp: 25, celebrationTier: true },
+  { id: "spend-25k", category: "all-time", group: "spend", label: "$25K Lifetime", description: "Spent $25,000 total on AI coding", threshold: 25000, xp: 35, celebrationTier: true },
 
   // ── All Time: Streak ──
   { id: "streak-7", category: "all-time", group: "streak", label: "7-Day Streak", description: "Coded 7 days in a row", threshold: 7, xp: 5, celebrationTier: false },
@@ -66,10 +66,10 @@ export const BADGES: BadgeDefinition[] = [
   { id: "rank-1", category: "all-time", group: "rank", label: "#1", description: "The #1 user on the leaderboard", threshold: 1, xp: 40, celebrationTier: true },
 
   // ── All Time: Days Active ──
-  { id: "days-10", category: "all-time", group: "days-active", label: "10 Days Active", description: "Used Claude Code on 10 distinct days", threshold: 10, xp: 5, celebrationTier: false },
-  { id: "days-30", category: "all-time", group: "days-active", label: "30 Days Active", description: "Used Claude Code on 30 distinct days", threshold: 30, xp: 10, celebrationTier: false },
-  { id: "days-100", category: "all-time", group: "days-active", label: "100 Days Active", description: "Used Claude Code on 100 distinct days", threshold: 100, xp: 18, celebrationTier: true },
-  { id: "days-365", category: "all-time", group: "days-active", label: "365 Days Active", description: "Used Claude Code on 365 distinct days", threshold: 365, xp: 30, celebrationTier: true },
+  { id: "days-10", category: "all-time", group: "days-active", label: "10 Days Active", description: "Used AI coding tools on 10 distinct days", threshold: 10, xp: 5, celebrationTier: false },
+  { id: "days-30", category: "all-time", group: "days-active", label: "30 Days Active", description: "Used AI coding tools on 30 distinct days", threshold: 30, xp: 10, celebrationTier: false },
+  { id: "days-100", category: "all-time", group: "days-active", label: "100 Days Active", description: "Used AI coding tools on 100 distinct days", threshold: 100, xp: 18, celebrationTier: true },
+  { id: "days-365", category: "all-time", group: "days-active", label: "365 Days Active", description: "Used AI coding tools on 365 distinct days", threshold: 365, xp: 30, celebrationTier: true },
 
   // ── Daily: Spend ──
   { id: "daily-spend-25", category: "daily", group: "daily-spend", label: "$25 Day", description: "Spent $25 in a single day", threshold: 25, xp: 5, celebrationTier: false },

@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { env } from "@/lib/env";
 import { db } from "@/lib/db";
 import { users, pageVisits, feedback } from "@/lib/db/schema";
 import { sql, count, countDistinct, gte, desc } from "drizzle-orm";
 import { AdminLogin } from "./AdminLogin";
+
+export const metadata: Metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false },
+};
 
 async function verifyAdmin(): Promise<boolean> {
   const adminPassword = env.ADMIN_PASSWORD;

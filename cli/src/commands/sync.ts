@@ -31,10 +31,10 @@ export async function runSync(
   try {
     payload = await extractAndSanitize(options.since);
   } catch (err) {
-    s.fail("Could not read Claude Code usage data.");
+    s.fail("Could not read usage data.");
     if (err instanceof Error) {
       console.error(
-        chalk.dim("Make sure you have used Claude Code on this machine.")
+        chalk.dim("Make sure you have used Claude Code, OpenCode, or Codex on this machine.")
       );
       console.error(chalk.dim(`Detail: ${err.message}`));
     }
@@ -100,17 +100,17 @@ export async function runSync(
 }
 
 /**
- * Sync command -- Extract local Claude Code usage data, sanitize it, and upload to clawdboard.
+ * Sync command -- Extract local usage data (Claude Code + OpenCode + Codex), sanitize, and upload.
  *
  * Flow:
  * 1. Load config and check for API token
- * 2. Extract usage data from ccusage (local JSONL files)
+ * 2. Extract usage data from all available sources
  * 3. Sanitize through privacy allowlist
  * 4. Upload to clawdboard server
  * 5. Display summary with token/cost totals
  */
 export const syncCommand = new Command("sync")
-  .description("Sync Claude Code usage data")
+  .description("Sync usage data (Claude Code + OpenCode + Codex)")
   .option("--since <date>", "Sync data from this date forward (YYYY-MM-DD)")
   .option("--dry-run", "Extract and display data without uploading")
   .action(async (options: { since?: string; dryRun?: boolean }) => {

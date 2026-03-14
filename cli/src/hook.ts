@@ -6,6 +6,8 @@ import { loadConfig, getServerUrl } from "./config.js";
 import { ApiClient } from "./api-client.js";
 import { extractAndSanitize } from "./extract.js";
 import { readSettings, writeSettings, installHook } from "./settings.js";
+import { installOpenCodePlugin } from "./opencode-setup.js";
+import { installCodexHook } from "./codex-setup.js";
 
 export const DEBOUNCE_MS = 2 * 60 * 60 * 1000; // 2 hours
 export const DEBOUNCE_MINUTES = DEBOUNCE_MS / 60_000; // used by shell-level debounce in settings.ts
@@ -98,7 +100,7 @@ export async function runHookSync(): Promise<void> {
     const client = new ApiClient(serverUrl, config.apiToken);
     await client.sync({ ...payload, syncIntervalMs: DEBOUNCE_MS });
 
-    // Step 6: Auto-upgrade hook if running the old un-debounced version.
+    // Step 6: Auto-upgrade hooks if running old versions.
     // This is the last thing we do — if it fails, the sync already succeeded.
     try {
       const settings = await readSettings();
@@ -107,7 +109,19 @@ export async function runHookSync(): Promise<void> {
         await writeSettings(upgraded);
       }
     } catch {
-      // Upgrade failure is non-fatal
+      // Claude Code hook upgrade failure is non-fatal
+    }
+
+    try {
+      await installOpenCodePlugin();
+    } catch {
+      // OpenCode plugin upgrade failure is non-fatal
+    }
+
+    try {
+      await installCodexHook();
+    } catch {
+      // Codex hook upgrade failure is non-fatal
     }
   } catch {
     // Swallow all errors -- async hook must exit cleanly

@@ -362,8 +362,9 @@ export default async function StatsPage() {
             (GPT-4o, o-series), and others. Cost share reflects how much of
             total community spend goes to each model — higher-tier models cost
             more per token, so they can dominate spend even with fewer users.
+            Click any model for detailed usage statistics.
           </p>
-          <ModelShareChart data={models} />
+          <ModelShareChart data={models} linkToModelPages />
         </section>
 
         {/* ── Source breakdown ─────────────────────────────────────────────── */}

@@ -1,4 +1,6 @@
-import { SyncPayloadSchema, type SyncPayload } from "./schemas.js";
+import { SyncPayloadSchema, type SyncPayload, type SyncDay } from "./schemas.js";
+import { extractOpenCodeData, hasOpenCodeData } from "./opencode.js";
+import { extractCodexData, hasCodexData } from "./codex.js";
 
 /**
  * Privacy-preserving data extraction from raw ccusage DailyUsage data.
@@ -15,6 +17,7 @@ import { SyncPayloadSchema, type SyncPayload } from "./schemas.js";
  * 4. Throws on validation failure (caller must handle)
  *
  * @param raw - Array of raw ccusage DailyUsage-like objects (typed as unknown[] for safety)
+ * @param source - The data source tag for these entries
  * @returns A clean SyncPayload with only allowlisted fields
  * @throws ZodError if the sanitized data fails schema validation
  */
@@ -53,40 +56,56 @@ export function sanitizeDailyData(
 }
 
 /**
- * Extract usage data from ccusage and sanitize it for upload.
+ * Extract usage data from all available sources, sanitize, and combine.
  *
- * This function is the bridge between ccusage's data-loader API and our
- * privacy-preserving sync pipeline. It:
- * 1. Loads daily usage data from ccusage (reads local JSONL files)
- * 2. Passes the raw data through sanitizeDailyData (privacy allowlist)
- * 3. Returns a validated SyncPayload ready for upload
+ * Sources:
+ * 1. ccusage (Claude Code) — reads local JSONL files from ~/.claude/
+ * 2. OpenCode — reads message JSON files from ~/.local/share/opencode/
+ * 3. Codex CLI — reads rollout JSONL files from ~/.codex/sessions/
  *
- * Note: ccusage uses Valibot branded types at compile time, but runtime values
- * are plain strings/numbers. We cast through unknown[] for safety at the boundary.
+ * All sources are optional and run concurrently. Each source's entries
+ * are tagged with their source name and kept as separate daily entries
+ * (not merged) so the server can store them as individual rows per source.
  *
  * @param since - Optional YYYY-MM-DD date to filter data from (inclusive)
  * @returns A clean SyncPayload with only allowlisted fields
- * @throws Error if ccusage data directory not found or no data available
+ * @throws Error if no data sources are available at all
  */
 export async function extractAndSanitize(
   since?: string
 ): Promise<SyncPayload> {
-  // Dynamic import to avoid module resolution issues if ccusage not installed
-  const { loadDailyUsageData } = await import("ccusage/data-loader");
+  // Run all extractions concurrently — they read from independent directories
+  const [claudeResult, opencodeResult, codexResult] = await Promise.allSettled([
+    // Source 1: Claude Code via ccusage
+    (async (): Promise<SyncDay[]> => {
+      const { loadDailyUsageData } = await import("ccusage/data-loader");
+      const options: Record<string, unknown> = { mode: "calculate" };
+      if (since) options.since = since;
+      const raw = await loadDailyUsageData(
+        options as Parameters<typeof loadDailyUsageData>[0]
+      );
+      return sanitizeDailyData(raw as unknown[], "claude-code").days;
+    })(),
+    // Source 2: OpenCode
+    extractOpenCodeData(since),
+    // Source 3: Codex CLI
+    extractCodexData(since),
+  ]);
 
-  const options: Record<string, unknown> = {
-    mode: "calculate",
-  };
+  const claudeDays = claudeResult.status === "fulfilled" ? claudeResult.value : [];
+  const opencodeDays = opencodeResult.status === "fulfilled" ? opencodeResult.value : [];
+  const codexDays = codexResult.status === "fulfilled" ? codexResult.value : [];
 
-  if (since) {
-    options.since = since;
+  // Concatenate all sources — each entry already has its source tag,
+  // so the server can upsert them as separate (user_id, date, source) rows
+  const allDays = [...claudeDays, ...opencodeDays, ...codexDays];
+
+  if (allDays.length === 0 && !hasOpenCodeData() && !hasCodexData()) {
+    throw new Error(
+      "No usage data found. Make sure you have used Claude Code, OpenCode, or Codex on this machine."
+    );
   }
 
-  // Load raw data from ccusage -- returns DailyUsage[] with Valibot branded types
-  // Cast to unknown[] at the boundary for privacy-safe extraction
-  const raw = await loadDailyUsageData(options as Parameters<typeof loadDailyUsageData>[0]);
-
-  // Pass through privacy allowlist and Zod validation
-  // Tag as "claude-code" source since ccusage reads Claude Code logs
-  return sanitizeDailyData(raw as unknown[], "claude-code");
+  // Final Zod validation on the combined payload
+  return SyncPayloadSchema.parse({ days: allDays });
 }

@@ -125,7 +125,7 @@ export default async function DeviceAuthPage({
             </div>
             {/* Title + filters */}
             <div className="flex items-center justify-between mb-5">
-              <span className="text-base font-bold text-foreground">$ Claude Code Usage Leaderboard</span>
+              <span className="text-base font-bold text-foreground">$ AI Coding Usage Leaderboard</span>
               <div className="flex gap-1">
                 {["--today", "--7d", "--30d", "--month", "--ytd"].map((label, i) => (
                   <div key={i} className={`h-7 px-3 rounded-md flex items-center text-[11px] ${i === 2 ? "bg-accent/35 border border-accent/40 text-accent" : "bg-foreground/8 text-muted"}`}>{label}</div>

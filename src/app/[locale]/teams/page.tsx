@@ -20,9 +20,9 @@ import { PERIOD_COOKIE, parsePeriodCookie } from "@/lib/period-cookie";
 import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Team Leaderboard — Compare Claude Code Usage by Team",
+  title: "Team Leaderboard — Compare AI Coding Usage by Team",
   description:
-    "See which teams spend the most on Claude Code. Ranked by total cost, tokens, and active members — compare your team's usage against others.",
+    "See which teams spend the most on AI coding. Ranked by total cost, tokens, and active members — compare your team's usage against others.",
   alternates: { canonical: `${env.NEXT_PUBLIC_BASE_URL}/teams` },
 };
 
@@ -70,7 +70,7 @@ export default async function TeamLeaderboardPage({
     <div className="relative min-h-screen bg-background">
       {/* Header */}
       <Header
-        subtitle="claude code leaderboard"
+        subtitle="ai coding leaderboard"
         rightContent={
           session?.user ? (
             <>

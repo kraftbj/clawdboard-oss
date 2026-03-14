@@ -21,7 +21,7 @@ src/
   lib/          # Shared utilities (db, auth, env, sync, etc.)
   actions/      # Server actions
 cli/            # CLI package (npm: clawdboard)
-plugin/         # Claude Code plugin
+opencode-plugin/# OpenCode plugin (npm: clawdboard-opencode)
 ```
 
 ## Development

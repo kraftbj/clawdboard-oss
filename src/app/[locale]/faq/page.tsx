@@ -9,7 +9,7 @@ import { getTranslations } from "next-intl/server";
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
 export const metadata: Metadata = {
-  title: "FAQ — How Claude Code Tracking, Costs & Streaks Work",
+  title: "FAQ — How AI Coding Tracking, Costs & Streaks Work",
   description:
     "Answers to common questions about clawdboard — how cost estimates work, what data is tracked, privacy guarantees, streak calculations, and how to join the leaderboard.",
   alternates: { canonical: `${BASE_URL}/faq` },

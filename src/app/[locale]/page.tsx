@@ -161,7 +161,7 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
       {/* Header */}
       <Header
         linkHome={false}
-        subtitle="claude code leaderboard"
+        subtitle="ai coding leaderboard"
         rightContent={
           session?.user ? (
             <>

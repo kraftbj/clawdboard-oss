@@ -9,7 +9,7 @@ import { loadGoogleFont } from "@/lib/og-fonts";
 
 // ─── Next.js OG Image file convention exports ──────────────────────────────
 
-export const alt = "clawdboard — Claude Code Usage Leaderboard";
+export const alt = "clawdboard — AI Coding Usage Leaderboard";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 3600; // 1 hour cache
@@ -134,7 +134,7 @@ export default async function Image() {
               lineHeight: 1.6,
             }}
           >
-            <span>Track your Claude Code usage.</span>
+            <span>Track your AI coding usage.</span>
             <span>Compete with your team.</span>
             <span>Earn your streak.</span>
           </div>

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import type { ModelStats } from "@/lib/db/stats";
 import { MODEL_COLORS, friendlyModelName } from "@/lib/chart-utils";
+import { Link } from "@/i18n/navigation";
 
 function formatCurrency(value: number): string {
   if (value >= 1000) return `$${(value / 1000).toFixed(1)}k`;
@@ -24,7 +25,13 @@ function formatTokensCompact(count: number): string {
   }).format(count);
 }
 
-export function ModelShareChart({ data }: { data: ModelStats[] }) {
+export function ModelShareChart({
+  data,
+  linkToModelPages = false,
+}: {
+  data: ModelStats[];
+  linkToModelPages?: boolean;
+}) {
   if (data.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-surface p-6">
@@ -116,29 +123,49 @@ export function ModelShareChart({ data }: { data: ModelStats[] }) {
 
       {/* Model detail cards for SEO content */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {chartData.slice(0, 6).map((model, i) => (
-          <div
-            key={model.modelName}
-            className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
-          >
+        {chartData.slice(0, 6).map((model, i) => {
+          const slug = model.modelName.replace(/-\d{6,8}$/, "");
+          const inner = (
+            <>
+              <div
+                className="h-3 w-3 rounded-full shrink-0"
+                style={{
+                  backgroundColor: MODEL_COLORS[i % MODEL_COLORS.length],
+                }}
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-sm font-medium text-foreground truncate">
+                  {model.displayName}
+                </p>
+                <p className="font-mono text-xs text-muted">
+                  {formatCurrency(model.cost)} &middot;{" "}
+                  {model.costShare}% of spend &middot;{" "}
+                  {model.userCount} {model.userCount === 1 ? "user" : "users"}
+                </p>
+              </div>
+              {linkToModelPages && (
+                <span className="text-muted text-xs shrink-0">&rarr;</span>
+              )}
+            </>
+          );
+
+          return linkToModelPages ? (
+            <Link
+              key={model.modelName}
+              href={`/stats/models/${slug}`}
+              className="flex items-center gap-3 rounded-md border border-border bg-background p-3 transition-colors hover:border-accent/40 hover:bg-surface-hover"
+            >
+              {inner}
+            </Link>
+          ) : (
             <div
-              className="h-3 w-3 rounded-full shrink-0"
-              style={{
-                backgroundColor: MODEL_COLORS[i % MODEL_COLORS.length],
-              }}
-            />
-            <div className="min-w-0">
-              <p className="font-mono text-sm font-medium text-foreground truncate">
-                {model.displayName}
-              </p>
-              <p className="font-mono text-xs text-muted">
-                {formatCurrency(model.cost)} &middot;{" "}
-                {model.costShare}% of spend &middot;{" "}
-                {model.userCount} {model.userCount === 1 ? "user" : "users"}
-              </p>
+              key={model.modelName}
+              className="flex items-center gap-3 rounded-md border border-border bg-background p-3"
+            >
+              {inner}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

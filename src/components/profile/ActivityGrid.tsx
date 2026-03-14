@@ -142,7 +142,7 @@ export function ActivityGrid({ data }: ActivityGridProps) {
     <div className="rounded-lg border border-border bg-surface p-6">
       <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
         {t("activity")}
-        <InfoTooltip text="Daily estimated Claude Code costs over the past year. Intensity is based on quartiles of your active days." />
+        <InfoTooltip text="Daily estimated AI coding costs over the past year. Intensity is based on quartiles of your active days." />
       </h3>
       <div className="overflow-x-auto">
         <div className="inline-block">

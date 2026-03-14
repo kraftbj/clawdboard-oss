@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { DEBOUNCE_MINUTES } from "./hook.js";
+import { buildDebounceCommand } from "./accumulator.js";
 
 /**
  * A single hook entry within a hook group.
@@ -124,10 +125,7 @@ function buildHookEntry(): HookGroup {
     hooks: [
       {
         type: "command",
-        command:
-          `bash -c 'f=$HOME/.clawdboard/last-sync; [ -f "$f" ] && [ -n "$(find "$f" -mmin -` +
-          DEBOUNCE_MINUTES +
-          ` 2>/dev/null)" ] && exit 0; npx clawdboard hook-sync'`,
+        command: buildDebounceCommand(DEBOUNCE_MINUTES),
         async: true,
         timeout: 120,
       },

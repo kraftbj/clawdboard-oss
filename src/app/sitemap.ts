@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { users, teams } from "@/lib/db/schema";
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { routing } from "@/i18n/routing";
+import { getDistinctModelSlugs } from "@/lib/db/stats";
 
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
@@ -27,7 +28,7 @@ function localeAlternates(path: string) {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [allUsers, publicTeams] = await Promise.all([
+  const [allUsers, publicTeams, modelSlugs] = await Promise.all([
     db
       .select({ githubUsername: users.githubUsername })
       .from(users)
@@ -36,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .select({ slug: teams.slug })
       .from(teams)
       .where(and(eq(teams.isPublic, true), isNull(teams.deletedAt))),
+    getDistinctModelSlugs(),
   ]);
 
   const staticPages: {
@@ -86,6 +88,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.6,
+      alternates: localeAlternates(path),
+    });
+  }
+
+  // Model stats pages
+  for (const slug of modelSlugs) {
+    const path = `/stats/models/${slug}`;
+    entries.push({
+      url: localeUrl("en", path),
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.7,
       alternates: localeAlternates(path),
     });
   }

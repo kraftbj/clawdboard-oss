@@ -11,7 +11,7 @@ const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 export const metadata: Metadata = {
   title: "Terms of Service — clawdboard",
   description:
-    "Terms of Service for clawdboard, the Claude Code usage leaderboard. Read about eligibility, acceptable use, data accuracy, and account termination.",
+    "Terms of Service for clawdboard, the AI coding usage leaderboard. Read about eligibility, acceptable use, data accuracy, and account termination.",
   alternates: { canonical: `${BASE_URL}/terms` },
 };
 
@@ -74,7 +74,7 @@ export default function TermsPage() {
 
           <Section num={4} title="Leaderboard Participation">
             <p>
-              By syncing your Claude Code usage data, you consent to having your
+              By syncing your AI coding usage data, you consent to having your
               name, GitHub username, avatar, and aggregated usage metrics
               displayed publicly on the clawdboard leaderboard. If you no longer
               wish to appear on the leaderboard, you may delete your account.

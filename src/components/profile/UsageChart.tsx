@@ -193,7 +193,7 @@ export function UsageChart({ data, period, range }: UsageChartProps) {
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
           {title}
-          <InfoTooltip text="Estimated daily Claude Code usage based on API token consumption and model pricing." />
+          <InfoTooltip text="Estimated daily AI coding usage based on API token consumption and model pricing." />
         </h3>
         <div className="flex items-center rounded-lg border border-border bg-surface overflow-hidden">
           {METRICS.map((m) => (

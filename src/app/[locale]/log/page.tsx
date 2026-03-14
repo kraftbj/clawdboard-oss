@@ -9,7 +9,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://clawdboard.ai";
 export const metadata: Metadata = {
   title: "Changelog — What's New on clawdboard",
   description:
-    "All the latest features, fixes, and improvements to clawdboard — the Claude Code usage leaderboard. Stay up to date with what's changed.",
+    "All the latest features, fixes, and improvements to clawdboard — the AI coding usage leaderboard. Stay up to date with what's changed.",
   alternates: { canonical: `${BASE_URL}/log` },
 };
 
