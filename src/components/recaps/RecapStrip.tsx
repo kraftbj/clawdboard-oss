@@ -174,9 +174,9 @@ function RecapCardWide({
       </div>
 
       {/* Stats row */}
-      <div className="mt-4 flex items-center gap-6">
+      <div className="mt-4 flex items-center gap-4 overflow-hidden">
         {/* Rank */}
-        <div className="flex items-baseline gap-1.5">
+        <div className="flex items-baseline gap-1.5 shrink-0">
           {data.stateTier === "podium" && (
             <span className="text-base">{getMedalEmoji(data.rank)}</span>
           )}
@@ -195,43 +195,43 @@ function RecapCardWide({
           )}
         </div>
 
-        <div className="h-8 w-px bg-border" />
+        <div className="h-8 w-px bg-border shrink-0" />
 
         {/* Cost */}
-        <div>
+        <div className="shrink-0">
           <p className="font-mono text-[10px] text-muted">Spend</p>
           <p className="font-display text-lg font-bold text-foreground">
             {formatCost(data.totalCost)}
           </p>
         </div>
 
-        <div className="h-8 w-px bg-border" />
+        <div className="h-8 w-px bg-border shrink-0" />
 
         {/* Tokens */}
-        <div>
+        <div className="shrink-0">
           <p className="font-mono text-[10px] text-muted">Tokens</p>
           <p className="font-display text-lg font-bold text-foreground">
             {formatTokens(data.totalTokens)}
           </p>
         </div>
 
-        <div className="h-8 w-px bg-border" />
+        <div className="h-8 w-px bg-border shrink-0" />
 
         {/* Streak */}
-        <div>
+        <div className="shrink-0">
           <p className="font-mono text-[10px] text-muted">Streak</p>
           <p className="font-display text-lg font-bold text-accent">
             {data.currentStreak}d
           </p>
         </div>
 
-        {/* Top model — desktop only */}
+        {/* Top model — hidden when space is tight */}
         {data.topModel && (
           <>
-            <div className="h-8 w-px bg-border hidden sm:block" />
-            <div className="hidden sm:block">
+            <div className="h-8 w-px bg-border shrink-0 hidden lg:block" />
+            <div className="hidden lg:block min-w-0">
               <p className="font-mono text-[10px] text-muted">Top Model</p>
-              <p className="font-mono text-xs text-foreground/70">
+              <p className="font-mono text-xs text-foreground/70 truncate">
                 {data.topModel.name}
               </p>
             </div>
