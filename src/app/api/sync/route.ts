@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       const syncedDates = [...new Set(days.map(d => d.date))];
       const syncedSources = [...new Set(days.map(d => d.source).filter(Boolean))] as string[];
       if (syncedDates.length > 0) {
-        await db.execute(sql`
+        const migrationResult = await db.execute(sql`
           UPDATE daily_aggregates
           SET machine_id = ${machineId}
           WHERE user_id = ${user.id}
@@ -114,6 +114,10 @@ export async function POST(req: NextRequest) {
             AND date = ANY(${syncedDates})
             AND (source IS NULL OR source = ANY(${syncedSources}))
         `);
+        const migratedRows = migrationResult.rowCount ?? 0;
+        if (migratedRows > 0) {
+          console.log(`[sync] Migrated ${migratedRows} legacy rows to machineId=${machineId} for user=${user.id}`);
+        }
       }
     }
 
