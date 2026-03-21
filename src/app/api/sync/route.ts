@@ -99,11 +99,12 @@ export async function POST(req: NextRequest) {
     // 4b. Migrate existing NULL-machineId rows to this machine on first sync.
     // When a CLI upgrades to a version that sends machineId, existing rows
     // (from before multi-machine support) have NULL machine_id. The first
-    // machine to sync claims those rows so historical data isn't orphaned.
-    // If the user has multiple machines, the attribution is arbitrary but
-    // prevents data loss. Only claims rows without a machine_id assigned.
+    // machine to sync claims rows matching its sources so historical data
+    // isn't orphaned. Scoped to the sources in the current payload to avoid
+    // claiming rows from other sources that may belong to a different machine.
     if (machineId) {
       const syncedDates = [...new Set(days.map(d => d.date))];
+      const syncedSources = [...new Set(days.map(d => d.source).filter(Boolean))] as string[];
       if (syncedDates.length > 0) {
         await db.execute(sql`
           UPDATE daily_aggregates
@@ -111,6 +112,7 @@ export async function POST(req: NextRequest) {
           WHERE user_id = ${user.id}
             AND machine_id IS NULL
             AND date = ANY(${syncedDates})
+            AND (source IS NULL OR source = ANY(${syncedSources}))
         `);
       }
     }
