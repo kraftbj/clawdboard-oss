@@ -110,6 +110,17 @@ export async function POST(req: NextRequest) {
           eq(dailyAggregates.userId, user.id),
           isNull(dailyAggregates.machineId),
           inArray(dailyAggregates.date, syncedDates),
+          // Skip rows where this machine already owns the (date, source) pair.
+          // Without this guard, an old CLI (no machineId) could create a new
+          // NULL-machineId row, and the next machine-aware sync would try to
+          // claim it — violating the unique constraint.
+          sql`NOT EXISTS (
+            SELECT 1 FROM daily_aggregates existing
+            WHERE existing.user_id = ${dailyAggregates.userId}
+              AND existing.date = ${dailyAggregates.date}
+              AND existing.source IS NOT DISTINCT FROM ${dailyAggregates.source}
+              AND existing.machine_id = ${machineId}
+          )`,
         ];
         if (syncedSources.length > 0) {
           conditions.push(
