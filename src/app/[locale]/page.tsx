@@ -25,7 +25,6 @@ import { eq } from "drizzle-orm";
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { LeaderboardToggle } from "@/components/leaderboard/LeaderboardToggle";
 import { TimeFilter } from "@/components/leaderboard/TimeFilter";
-import { JoinBanner } from "@/components/leaderboard/JoinBanner";
 import { HeroSection } from "@/components/leaderboard/HeroSection";
 import { SyncBanner } from "@/components/leaderboard/SyncBanner";
 import { SyncCountdown } from "@/components/leaderboard/SyncCountdown";
@@ -189,6 +188,8 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
             vibeCoderCount={vibeCoderCount}
             totalCost={communityStats.totalCost}
             totalTokens={communityStats.totalTokens}
+            topWeeklyCost={rows.length > 0 ? Number(rows[0].totalCost) : 0}
+            longestStreak={communityStats.longestStreak}
           />
         )}
 
@@ -204,10 +205,10 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
           <TimeFilter current={period} from={range?.from} to={range?.to} />
         </div>
 
-        {/* SEO intro — visible only to unauthenticated visitors (and crawlers) */}
+        {/* SEO intro — visually hidden, available to crawlers */}
         {!session?.user && (
-          <p className="mb-6 font-mono text-xs leading-relaxed text-muted">
-            <span className="text-dim select-none">{"// "}</span>
+          <p className="sr-only">
+            <span>{"// "}</span>
             {t("seoIntro")}{" "}
             <Link href="/stats" className="text-accent hover:underline">
               View community-wide usage statistics &rarr;

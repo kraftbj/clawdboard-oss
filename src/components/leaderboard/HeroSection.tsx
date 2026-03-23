@@ -6,6 +6,8 @@ interface HeroSectionProps {
   vibeCoderCount: number;
   totalCost: string;
   totalTokens: number;
+  topWeeklyCost: number;
+  longestStreak: number;
 }
 
 function formatCurrency(n: number): string {
@@ -22,23 +24,24 @@ function formatTokens(n: number): string {
 }
 
 export async function HeroSection({
-  vibeCoderCount,
   totalCost,
   totalTokens,
+  topWeeklyCost,
+  longestStreak,
 }: HeroSectionProps) {
   const t = await getTranslations("leaderboard");
 
   return (
     <div className="mb-6 rounded-lg border border-accent/20 bg-accent/[0.03] p-6 sm:p-8">
-      {/* Headline */}
+      {/* Headline — data-driven, surfaces extremes */}
       <h2 className="font-display text-xl font-bold text-foreground sm:text-2xl mb-2">
-        {t("heroHeadline")}
+        {t("heroHeadline", { topCost: formatCurrency(topWeeklyCost) })}
       </h2>
       <p className="font-mono text-sm text-muted mb-5 max-w-2xl">
         {t("heroDescription")}
       </p>
 
-      {/* Social proof stats */}
+      {/* Social proof stats — extremes, not averages */}
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="rounded-lg bg-background/60 border border-border/50 p-3 text-center">
           <p className="font-mono text-lg font-bold text-accent sm:text-xl">
@@ -50,24 +53,24 @@ export async function HeroSection({
         </div>
         <div className="rounded-lg bg-background/60 border border-border/50 p-3 text-center">
           <p className="font-mono text-lg font-bold text-foreground sm:text-xl">
-            {vibeCoderCount}+
-          </p>
-          <p className="font-mono text-[10px] text-muted uppercase tracking-wider mt-0.5">
-            {t("heroDevelopers")}
-          </p>
-        </div>
-        <div className="rounded-lg bg-background/60 border border-border/50 p-3 text-center">
-          <p className="font-mono text-lg font-bold text-foreground sm:text-xl">
             {formatTokens(totalTokens)}
           </p>
           <p className="font-mono text-[10px] text-muted uppercase tracking-wider mt-0.5">
             {t("heroTokens")}
           </p>
         </div>
+        <div className="rounded-lg bg-background/60 border border-border/50 p-3 text-center">
+          <p className="font-mono text-lg font-bold text-foreground sm:text-xl">
+            {longestStreak}d
+          </p>
+          <p className="font-mono text-[10px] text-muted uppercase tracking-wider mt-0.5">
+            {t("heroLongestStreak")}
+          </p>
+        </div>
       </div>
 
       {/* Privacy one-liner */}
-      <p className="font-mono text-xs text-dim mb-5">
+      <p className="font-mono text-xs text-muted mb-5">
         <span className="text-success mr-1.5">&#10003;</span>
         {t("heroPrivacy")}
       </p>
