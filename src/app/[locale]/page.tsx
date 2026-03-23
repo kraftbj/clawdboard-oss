@@ -102,11 +102,13 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
     ? parseDateRange(params.from ?? saved?.from, params.to ?? saved?.to)
     : undefined;
 
-  const [{ rows, totalCount }, session, vibeCoderCount, communityStats] = await Promise.all([
+  const [{ rows, totalCount }, session, vibeCoderCount, communityStats, weeklyTop] = await Promise.all([
     getLeaderboardData(period, sort, order, range),
     cachedAuth(),
     getVibeCoderCount(),
     getCommunityStatsCached(),
+    // Always fetch 7d top cost for the hero headline (independent of current filter)
+    getLeaderboardData("7d", "cost", "desc"),
   ]);
 
   // Only query for authenticated users (simple indexed lookups)
@@ -189,7 +191,7 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
             vibeCoderCount={vibeCoderCount}
             totalCost={communityStats.totalCost}
             totalTokens={communityStats.totalTokens}
-            topWeeklyCost={rows.length > 0 ? Number(rows[0].totalCost) : 0}
+            topWeeklyCost={weeklyTop.rows.length > 0 ? Number(weeklyTop.rows[0].totalCost) : 0}
             longestStreak={communityStats.longestStreak}
           />
         )}
