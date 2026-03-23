@@ -92,6 +92,8 @@
     "heroLongestStreak": "längster Streak",
     "heroPrivacy": "Wir sehen nie deinen Code — nur aggregierte Token-Zähler aus lokalen Logs.",
     "heroSignIn": "Mit GitHub anmelden",
+    "shareLeaderboard": "Teilen",
+    "shareLeaderboardText": "Jemand hat diese Woche {topCost} für KI-Coding ausgegeben. Sieh wer an der Spitze der Vibecoding-Rangliste steht",
     "syncYourData": "Daten synchronisieren",
     "spent": "ausgegeben",
     "tokens": "Tokens",

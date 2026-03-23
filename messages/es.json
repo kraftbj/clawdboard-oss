@@ -92,6 +92,8 @@
     "heroLongestStreak": "racha más larga",
     "heroPrivacy": "Nunca vemos tu código — solo conteos de tokens agregados de logs locales.",
     "heroSignIn": "Iniciar sesión con GitHub",
+    "shareLeaderboard": "Compartir",
+    "shareLeaderboardText": "Alguien gastó {topCost} en codificación IA esta semana. Mira quién lidera la tabla de vibecoding",
     "syncYourData": "sincronizar tus datos",
     "spent": "gastado",
     "tokens": "tokens",

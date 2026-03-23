@@ -193,6 +193,8 @@
     "heroLongestStreak": "plus longue série",
     "heroPrivacy": "Nous ne voyons jamais votre code — uniquement les compteurs de tokens agrégés.",
     "heroSignIn": "Se connecter avec GitHub",
+    "shareLeaderboard": "Partager",
+    "shareLeaderboardText": "Quelqu'un a dépensé {topCost} en codage IA cette semaine. Voyez qui est en tête du classement vibecoding",
     "syncYourData": "synchroniser vos donnees",
     "spent": "depense",
     "tokens": "tokens",

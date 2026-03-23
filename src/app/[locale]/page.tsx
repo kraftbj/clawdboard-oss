@@ -35,6 +35,7 @@ import { SignInButton } from "@/components/auth/SignInButton";
 import { UserNav } from "@/components/auth/UserNav";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { Header } from "@/components/layout/Header";
+import { ShareLeaderboard } from "@/components/leaderboard/ShareLeaderboard";
 import { cookies } from "next/headers";
 import { PERIOD_COOKIE, parsePeriodCookie } from "@/lib/period-cookie";
 
@@ -198,10 +199,25 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
 
         {/* Time period filter */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="font-display text-base font-bold text-foreground sm:text-lg">
-            <span className="font-mono text-accent mr-2">$</span>
-            {t("heading")}
-          </h1>
+          <div className="flex items-center gap-3">
+            {session?.user ? (
+              <h1 className="font-display text-base font-bold text-foreground sm:text-lg">
+                <span className="font-mono text-accent mr-2">$</span>
+                {t("heading")}
+              </h1>
+            ) : (
+              <h2 className="font-display text-base font-bold text-foreground sm:text-lg">
+                <span className="font-mono text-accent mr-2">$</span>
+                {t("heading")}
+              </h2>
+            )}
+            {!session?.user && rows.length > 0 && (
+              <ShareLeaderboard
+                topCost={`$${Number(rows[0].totalCost).toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+                leaderboardUrl={env.NEXT_PUBLIC_BASE_URL}
+              />
+            )}
+          </div>
           <TimeFilter current={period} from={range?.from} to={range?.to} />
         </div>
 

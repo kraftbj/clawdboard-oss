@@ -194,6 +194,8 @@
     "heroLongestStreak": "longest streak",
     "heroPrivacy": "We never see your code — only aggregate token counts from local logs.",
     "heroSignIn": "Sign in with GitHub",
+    "shareLeaderboard": "Share",
+    "shareLeaderboardText": "Someone spent {topCost} on AI coding this week. See who's at the top of the vibecoding leaderboard",
     "syncYourData": "sync your data",
     "spent": "spent",
     "tokens": "tokens",
