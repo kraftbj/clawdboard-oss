@@ -10,6 +10,7 @@ import {
   getLeaderboardData,
   getUserLeaderboardRow,
   getVibeCoderCount,
+  getCommunityStatsCached,
   VALID_PERIODS,
   VALID_SORTS,
   VALID_ORDERS,
@@ -25,6 +26,7 @@ import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
 import { LeaderboardToggle } from "@/components/leaderboard/LeaderboardToggle";
 import { TimeFilter } from "@/components/leaderboard/TimeFilter";
 import { JoinBanner } from "@/components/leaderboard/JoinBanner";
+import { HeroSection } from "@/components/leaderboard/HeroSection";
 import { SyncBanner } from "@/components/leaderboard/SyncBanner";
 import { SyncCountdown } from "@/components/leaderboard/SyncCountdown";
 import { YourPosition } from "@/components/leaderboard/YourPosition";
@@ -100,10 +102,11 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
     ? parseDateRange(params.from ?? saved?.from, params.to ?? saved?.to)
     : undefined;
 
-  const [{ rows, totalCount }, session, vibeCoderCount] = await Promise.all([
+  const [{ rows, totalCount }, session, vibeCoderCount, communityStats] = await Promise.all([
     getLeaderboardData(period, sort, order, range),
     cachedAuth(),
     getVibeCoderCount(),
+    getCommunityStatsCached(),
   ]);
 
   // Only query for authenticated users (simple indexed lookups)
@@ -180,8 +183,14 @@ export default async function LeaderboardPage({ searchParams }: PageProps) {
 
       {/* Main content */}
       <main className="relative z-10 mx-auto max-w-5xl px-4 py-8 sm:px-6">
-        {/* Join banner for unauthenticated users */}
-        {!session?.user && <JoinBanner vibeCoderCount={vibeCoderCount} />}
+        {/* Hero section for unauthenticated users */}
+        {!session?.user && (
+          <HeroSection
+            vibeCoderCount={vibeCoderCount}
+            totalCost={communityStats.totalCost}
+            totalTokens={communityStats.totalTokens}
+          />
+        )}
 
         {/* Individuals/Teams toggle */}
         <LeaderboardToggle active="individuals" />
