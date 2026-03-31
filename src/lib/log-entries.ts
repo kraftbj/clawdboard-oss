@@ -12,6 +12,17 @@ export interface LogEntry {
 
 export const logEntries: LogEntry[] = [
   {
+    date: "2026-03-31",
+    items: [
+      {
+        title: "Faster hook-sync startup",
+        type: "improvement",
+        description:
+          "The auto-sync hook now detects if clawdboard is globally installed and calls it directly, skipping npm package resolution overhead. Falls back to npx for users without a global install.",
+      },
+    ],
+  },
+  {
     date: "2026-03-14",
     items: [
       {
