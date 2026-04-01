@@ -12,6 +12,17 @@ export interface LogEntry {
 
 export const logEntries: LogEntry[] = [
   {
+    date: "2026-04-01",
+    items: [
+      {
+        title: "Auto-migrate from PostToolUse to Stop hook",
+        type: "fix",
+        description:
+          "The auto-sync hook was firing on every tool call instead of once per session, causing unnecessary CPU usage — especially with multiple concurrent sessions. This update auto-migrates your hook to the Stop event (fires once when a session ends) with a shell-level debounce. The migration happens automatically on your next sync. If you want to fix it immediately, run: clawdboard setup",
+      },
+    ],
+  },
+  {
     date: "2026-03-31",
     items: [
       {
