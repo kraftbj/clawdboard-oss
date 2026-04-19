@@ -2,6 +2,10 @@ import "server-only";
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
 import { env } from "@/lib/env";
 
+// To revoke all admin sessions (suspected compromise, offboarding):
+// rotate AUTH_SECRET. Changing ADMIN_PASSWORD alone does NOT invalidate
+// existing cookies — tokens are HMAC-signed against AUTH_SECRET, not the
+// password. Without rotation, sessions expire naturally after ADMIN_SESSION_TTL_MS.
 export const ADMIN_COOKIE_NAME = "admin_session";
 export const ADMIN_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
 
