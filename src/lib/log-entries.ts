@@ -12,6 +12,17 @@ export interface LogEntry {
 
 export const logEntries: LogEntry[] = [
   {
+    date: "2026-04-19",
+    items: [
+      {
+        title: "Safer Codex config cleanup on upgrade",
+        type: "improvement",
+        description:
+          "The Codex legacy-block cleanup now matches only the exact 3-line block we originally wrote, so any [[hooks.*]] sections or top-level `hooks = ...` assignments you added yourself are left untouched.",
+      },
+    ],
+  },
+  {
     date: "2026-04-17",
     items: [
       {
