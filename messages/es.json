@@ -570,6 +570,7 @@
     "ctaSecondaryLabel": "Todas las estadisticas",
     "toolDescriptions": {
       "claude-code": "El CLI oficial de Anthropic para Claude. Un asistente de codificacion agentico que funciona directamente en tu terminal con acceso completo a tu base de codigo.",
+      "claude-code-desktop": "El agente de codificacion integrado en la aplicacion de escritorio de Claude (Cowork / Dispatch). Captura el uso de las sesiones en modo local-agent que se ejecutan dentro de la aplicacion de escritorio, separado del CLI de Claude Code.",
       "opencode": "Un asistente de codificacion IA open-source basado en terminal que soporta multiples proveedores de LLM. Disenado como una alternativa flexible con soporte de modelos agnostico al proveedor.",
       "opencode-go": "El nivel de suscripcion Go de OpenCode — un conjunto curado de modelos open-source de alto rendimiento (GLM, MiMo, DeepSeek, Kimi, Qwen, MiniMax) accedidos a traves del TUI de OpenCode.",
       "opencode-zen": "El nivel de proveedor pay-as-you-go de OpenCode que ofrece modelos open-source curados sin suscripcion, facturados por uso a traves del TUI de OpenCode.",

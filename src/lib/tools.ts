@@ -51,6 +51,13 @@ export const TOOL_REGISTRY: Record<string, ToolMeta> = {
     provider: "OpenAI",
     website: "https://github.com/openai/codex",
   },
+  "claude-code-desktop": {
+    slug: "claude-code-desktop",
+    name: "Claude Code Desktop",
+    color: "#f59e0b",
+    provider: "Anthropic",
+    website: "https://claude.ai/download",
+  },
   "gemini-cli": {
     slug: "gemini-cli",
     name: "Gemini CLI",

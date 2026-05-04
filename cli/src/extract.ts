@@ -1,6 +1,7 @@
 import { SyncPayloadSchema, type SyncPayload, type SyncDay } from "./schemas.js";
 import { extractOpenCodeData, hasOpenCodeData } from "./opencode.js";
 import { extractCodexData, hasCodexData } from "./codex.js";
+import { extractDesktopData, hasDesktopData } from "./desktop.js";
 import { extractGeminiCliData, hasGeminiCliData } from "./gemini-cli.js";
 import { extractCopilotCliData, hasCopilotCliData } from "./copilot-cli.js";
 import { extractAntigravityData, hasAntigravityData } from "./antigravity.js";
@@ -94,6 +95,7 @@ export async function extractAndSanitize(
     geminiResult,
     copilotResult,
     antigravityResult,
+    desktopResult,
   ] = await Promise.allSettled([
     // Source 1: Claude Code via ccusage
     (async (): Promise<SyncDay[]> => {
@@ -115,6 +117,8 @@ export async function extractAndSanitize(
     extractCopilotCliData(since),
     // Source 6: Antigravity (opt-in, gated internally on config)
     extractAntigravityData(since),
+    // Source 7: Claude desktop app (Cowork / Dispatch)
+    extractDesktopData(since),
   ]);
 
   const claudeDays = claudeResult.status === "fulfilled" ? claudeResult.value : [];
@@ -123,6 +127,7 @@ export async function extractAndSanitize(
   const geminiDays = geminiResult.status === "fulfilled" ? geminiResult.value : [];
   const copilotDays = copilotResult.status === "fulfilled" ? copilotResult.value : [];
   const antigravityDays = antigravityResult.status === "fulfilled" ? antigravityResult.value : [];
+  const desktopDays = desktopResult.status === "fulfilled" ? desktopResult.value : [];
 
   // Concatenate all sources — each entry already has its source tag,
   // so the server can upsert them as separate (user_id, date, source) rows
@@ -133,6 +138,7 @@ export async function extractAndSanitize(
     ...geminiDays,
     ...copilotDays,
     ...antigravityDays,
+    ...desktopDays,
   ];
 
   if (
@@ -141,10 +147,11 @@ export async function extractAndSanitize(
     !hasCodexData() &&
     !hasGeminiCliData() &&
     !hasCopilotCliData() &&
-    !hasAntigravityData()
+    !hasAntigravityData() &&
+    !hasDesktopData()
   ) {
     throw new Error(
-      "No usage data found. Make sure you have used Claude Code, OpenCode, Codex, Gemini CLI, GitHub Copilot CLI, or Antigravity on this machine."
+      "No usage data found. Make sure you have used Claude Code, OpenCode, Codex, Gemini CLI, GitHub Copilot CLI, Antigravity, or the Claude desktop app on this machine."
     );
   }
 

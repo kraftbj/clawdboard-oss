@@ -15,6 +15,7 @@ import { TOOLTIP_STYLES, AXIS_COMMON } from "@/lib/chart-utils";
 interface ToolComparisonPoint {
   date: string;
   claudeCode: number;
+  claudeCodeDesktop: number;
   opencode: number;
   opencodeGo: number;
   opencodeZen: number;
@@ -30,6 +31,7 @@ interface ToolComparisonChartProps {
 
 const TOOL_CONFIG = [
   { key: "claudeCode", label: "Claude Code", color: "#F9A615" },
+  { key: "claudeCodeDesktop", label: "Claude Code Desktop", color: "#f59e0b" },
   { key: "opencode", label: "OpenCode", color: "#3b82f6" },
   { key: "opencodeGo", label: "OpenCode Go", color: "#facc15" },
   { key: "opencodeZen", label: "OpenCode Zen", color: "#a78bfa" },
@@ -55,6 +57,8 @@ function movingAverage(
     return {
       date: point.date,
       claudeCode: slice.reduce((s, p) => s + p.claudeCode, 0) / n,
+      claudeCodeDesktop:
+        slice.reduce((s, p) => s + p.claudeCodeDesktop, 0) / n,
       opencode: slice.reduce((s, p) => s + p.opencode, 0) / n,
       opencodeGo: slice.reduce((s, p) => s + p.opencodeGo, 0) / n,
       opencodeZen: slice.reduce((s, p) => s + p.opencodeZen, 0) / n,

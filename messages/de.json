@@ -570,6 +570,7 @@
     "ctaSecondaryLabel": "Alle Statistiken",
     "toolDescriptions": {
       "claude-code": "Anthropics offizielles CLI fur Claude. Ein agentischer Coding-Assistent, der direkt in deinem Terminal mit vollem Zugriff auf deine Codebasis arbeitet.",
+      "claude-code-desktop": "Der in die Claude-Desktop-App integrierte Coding-Agent (Cowork / Dispatch). Erfasst die Nutzung von Local-Agent-Mode-Sitzungen innerhalb der Desktop-App, getrennt vom Claude Code CLI.",
       "opencode": "Ein open-source terminalbasierter KI-Coding-Assistent, der mehrere LLM-Anbieter unterstutzt. Als flexible Alternative mit anbieterunabhangiger Modellunterstutzung konzipiert.",
       "opencode-go": "OpenCodes Go-Abonnementstufe — ein kuratierter Satz leistungsstarker open-source Modelle (GLM, MiMo, DeepSeek, Kimi, Qwen, MiniMax), zuganglich uber das OpenCode TUI.",
       "opencode-zen": "OpenCodes pay-as-you-go Anbieterstufe, die kuratierte open-source Modelle ohne Abonnement bietet, nach Nutzung uber das OpenCode TUI abgerechnet.",

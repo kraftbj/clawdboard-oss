@@ -301,6 +301,7 @@ export default async function StatsPage() {
                 .map((s) => {
                   const labels: Record<string, string> = {
                     "claude-code": "Claude Code",
+                    "claude-code-desktop": "Claude Code Desktop",
                     opencode: "OpenCode",
                     "opencode-go": "OpenCode Go",
                     "opencode-zen": "OpenCode Zen",

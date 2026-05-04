@@ -23,6 +23,7 @@ interface SourceBreakdownChartProps {
 
 const SOURCE_COLORS: Record<string, string> = {
   "claude-code": "#F9A615", // marigold (primary accent)
+  "claude-code-desktop": "#f59e0b", // amber
   opencode: "#3b82f6", // blue
   "opencode-go": "#facc15", // yellow
   "opencode-zen": "#a78bfa", // lavender
@@ -34,6 +35,7 @@ const SOURCE_COLORS: Record<string, string> = {
 
 const SOURCE_LABELS: Record<string, string> = {
   "claude-code": "Claude Code",
+  "claude-code-desktop": "Claude Code Desktop",
   opencode: "OpenCode",
   "opencode-go": "OpenCode Go",
   "opencode-zen": "OpenCode Zen",

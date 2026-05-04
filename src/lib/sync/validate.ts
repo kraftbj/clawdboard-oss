@@ -19,6 +19,7 @@ const ModelBreakdownSchema = z.object({
  */
 export const SOURCE_VALUES = [
   "claude-code",
+  "claude-code-desktop",
   "opencode",
   "opencode-go",
   "opencode-zen",

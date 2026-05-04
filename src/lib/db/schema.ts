@@ -75,8 +75,9 @@ export const dailyAggregates = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     date: text("date").notNull(), // "YYYY-MM-DD"
-    // "claude-code" | "opencode" | "opencode-go" | "opencode-zen" | "codex"
-    //   | "gemini-cli" | "antigravity" | "copilot-cli" | null (legacy)
+    // "claude-code" | "claude-code-desktop" | "opencode" | "opencode-go"
+    //   | "opencode-zen" | "codex" | "gemini-cli" | "antigravity"
+    //   | "copilot-cli" | null (legacy)
     source: text("source"),
     machineId: text("machine_id"), // stable per-machine identifier (random UUID)
     inputTokens: bigint("input_tokens", { mode: "number" }).default(0),

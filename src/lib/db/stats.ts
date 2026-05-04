@@ -622,6 +622,7 @@ export async function getSourceModelBreakdown(
 export interface SourceComparisonPoint {
   date: string;
   claudeCode: number;
+  claudeCodeDesktop: number;
   opencode: number;
   opencodeGo: number;
   opencodeZen: number;
@@ -644,6 +645,7 @@ export async function getSourceComparisonTrends(
       SELECT
         date,
         COALESCE(SUM(CASE WHEN source = 'claude-code' OR source IS NULL THEN total_cost::numeric ELSE 0 END), 0)::float AS claude_code,
+        COALESCE(SUM(CASE WHEN source = 'claude-code-desktop' THEN total_cost::numeric ELSE 0 END), 0)::float AS claude_code_desktop,
         COALESCE(SUM(CASE WHEN source = 'opencode' THEN total_cost::numeric ELSE 0 END), 0)::float AS opencode,
         COALESCE(SUM(CASE WHEN source = 'opencode-go' THEN total_cost::numeric ELSE 0 END), 0)::float AS opencode_go,
         COALESCE(SUM(CASE WHEN source = 'opencode-zen' THEN total_cost::numeric ELSE 0 END), 0)::float AS opencode_zen,
@@ -660,6 +662,7 @@ export async function getSourceComparisonTrends(
     return result.rows.map((row) => ({
       date: String(row.date),
       claudeCode: Number(row.claude_code ?? 0),
+      claudeCodeDesktop: Number(row.claude_code_desktop ?? 0),
       opencode: Number(row.opencode ?? 0),
       opencodeGo: Number(row.opencode_go ?? 0),
       opencodeZen: Number(row.opencode_zen ?? 0),
@@ -674,6 +677,7 @@ export async function getSourceComparisonTrends(
     return trends.map((t) => ({
       date: t.date,
       claudeCode: t.cost,
+      claudeCodeDesktop: 0,
       opencode: 0,
       opencodeGo: 0,
       opencodeZen: 0,
