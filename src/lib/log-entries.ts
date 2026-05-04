@@ -12,6 +12,41 @@ export interface LogEntry {
 
 export const logEntries: LogEntry[] = [
   {
+    date: "2026-05-04",
+    items: [
+      {
+        title: "Claude Code Desktop usage now tracked",
+        type: "feature",
+        description:
+          "clawdboard now captures Claude Code Desktop sessions (Cowork and Dispatch) alongside the CLI. After your next sync, desktop usage shows up as its own source on your profile and the leaderboard so you can see how much work you're doing in each environment.",
+      },
+      {
+        title: "Three new tools: Gemini CLI, Copilot CLI, Antigravity",
+        type: "feature",
+        description:
+          "Added support for Google Gemini CLI, GitHub Copilot CLI, and Google Antigravity. Antigravity is opt-in (run `clawdboard antigravity enable`) since it requires hitting Google's usage API. Each shows up as a separate source on your profile and the leaderboard.",
+      },
+      {
+        title: "OpenCode now split by provider tier",
+        type: "improvement",
+        description:
+          "OpenCode usage is broken out by tier — OpenCode Go and OpenCode Zen sessions now appear separately from your Anthropic, OpenAI, or OpenRouter usage routed through OpenCode. Previously everything was bucketed under a single \"OpenCode\" total, which hid which subscription you were actually using. Older data is reassigned on your next sync.",
+      },
+      {
+        title: "Mobile, accessibility, and visual polish",
+        type: "improvement",
+        description:
+          "A round of design fixes: stronger contrast on muted text for WCAG AA compliance, a global focus-visible ring for keyboard navigation, headlines that scale with viewport, structured skeletons on profile charts while data loads, larger touch targets on time-filter pills, and several mobile fixes (leaderboard no longer overflows, footer nav wraps, long usernames wrap).",
+      },
+      {
+        title: "Team creation reliability and tighter security defaults",
+        type: "fix",
+        description:
+          "Creating a team is now atomic — a failure mid-creation no longer leaves orphaned, unreachable teams in your account. The CLI also stores its config token with restrictive 0600 permissions (previously world-readable on shared machines), and session lifetimes were shortened (user sessions 2 years → 30 days, admin sessions 24h → 4h). Existing sessions keep their current expiry.",
+      },
+    ],
+  },
+  {
     date: "2026-04-19",
     items: [
       {
