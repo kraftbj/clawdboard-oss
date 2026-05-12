@@ -218,13 +218,16 @@ export function ActivityGrid({ data }: ActivityGridProps) {
               style={{
                 gridTemplateRows: "repeat(7, 12px)",
                 gridTemplateColumns: `repeat(${gridData.totalWeeks}, 12px)`,
-                gridAutoFlow: "column",
               }}
             >
               {gridData.cells.map((cell) => (
                 <div
                   key={cell.date}
                   className={`w-3 h-3 rounded-sm ${LEVEL_CLASSES[cell.level]} transition-colors hover:ring-1 hover:ring-foreground/30`}
+                  style={{
+                    gridRow: cell.dayOfWeek + 1,
+                    gridColumn: cell.weekIndex + 1,
+                  }}
                   title={`${cell.displayDate}: ${formatCost(cell.cost)}`}
                 />
               ))}
