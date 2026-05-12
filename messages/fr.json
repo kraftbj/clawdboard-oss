@@ -47,7 +47,8 @@
     "signInWithGithub": "Se connecter avec GitHub",
     "signInToContinue": "connectez-vous pour continuer",
     "publicProfileOnly": "Nous lisons uniquement votre profil public.",
-    "noRepoAccess": "Aucun acces aux depots requis."
+    "noRepoAccess": "Aucun acces aux depots requis.",
+    "signInInterrupted": "La connexion a ete interrompue. Veuillez reessayer."
   },
   "footer": {
     "tagline": "classement codage IA",

@@ -47,7 +47,8 @@
     "signInWithGithub": "Mit GitHub anmelden",
     "signInToContinue": "melde dich an, um fortzufahren",
     "publicProfileOnly": "Wir lesen nur dein offentliches Profil.",
-    "noRepoAccess": "Kein Repository-Zugriff erforderlich."
+    "noRepoAccess": "Kein Repository-Zugriff erforderlich.",
+    "signInInterrupted": "Die Anmeldung wurde unterbrochen. Bitte versuche es erneut."
   },
   "footer": {
     "tagline": "KI-Coding Rangliste",

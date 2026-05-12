@@ -47,7 +47,8 @@
     "signInWithGithub": "Iniciar sesion con GitHub",
     "signInToContinue": "inicia sesion para continuar",
     "publicProfileOnly": "Solo leemos tu perfil publico.",
-    "noRepoAccess": "No se requiere acceso a repositorios."
+    "noRepoAccess": "No se requiere acceso a repositorios.",
+    "signInInterrupted": "El inicio de sesion se interrumpio. Intentalo de nuevo."
   },
   "footer": {
     "tagline": "clasificacion de codificacion IA",
